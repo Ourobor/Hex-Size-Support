@@ -1,9 +1,4 @@
 Hooks.on("renderTokenConfig", async (app, html) => {
-	console.log("Token Config")
-	console.log(app)
-	console.log(html)
-	console.log(Handlebars)
-
 	let flags = {
 		altSnapping: app.token.getFlag("hex-size-support","altSnapping") || false,
 		evenSnap: app.token.getFlag("hex-size-support","evenSnap") || false
@@ -101,6 +96,11 @@ Token.prototype.oddSnap = function(dest){
     //get coordinates of the center snap point
     let center = canvas.grid.getCenter(dest.x + offset.x, dest.y + offset.y);
 
+
+    //set the pivot to zero to ensure that pivot is changed correctly if a token is changed from
+    //even snapping to odd snapping
+	this.icon.pivot.y = 0;
+
     //remove the offset from the newly discovered true center and store
     return {
     	x: center[0] - offset.x,
@@ -129,30 +129,33 @@ Token.prototype.evenSnap = function(dest){
 
     //calculate the slope of the line drawn between the tokens center and the actual grid's center
     let slope = -(tokenCenter.y - snappedCenter.y) / (tokenCenter.x - snappedCenter.x)
-    console.log(slope)
+    
+    //we use the slope of this line to determine the section of the hex we are in. The hex is divided up
+    //evenly into 6 sections from the center. A line with slope of around 1.732 has an angle from the x axis of about
+    //60 degrees, so we use that to determine roughly which angle we are in.
 
     let vertexOffset = {x:0, y:0}
 
-    //determine which vertex to snap to
+    //determine if the point is above the center or below
     if(tokenCenter.y < snappedCenter.y){
-    	console.log("Above")
+    	
     	if(Math.sign(slope) == 1){
     		if(slope < 1.732){
-    			console.log("Hex 3");
+    			// console.log("Hex 3");
     			vertexOffset = vertexFind(3, canvas.grid.grid.w, canvas.grid.grid.h)
     		}
     		else{
-    			console.log("Hex 2");
+    			// console.log("Hex 2");
     			vertexOffset = vertexFind(2, canvas.grid.grid.w, canvas.grid.grid.h)
     		}
     	}
     	else{
     		if(slope > -1.732){
-    			console.log("Hex 1");
+    			// console.log("Hex 1");
     			vertexOffset = vertexFind(1, canvas.grid.grid.w, canvas.grid.grid.h)
     		}
     		else{
-    			console.log("Hex 2");
+    			// console.log("Hex 2");
     			vertexOffset = vertexFind(2, canvas.grid.grid.w, canvas.grid.grid.h)
     		}
     	}
@@ -160,27 +163,29 @@ Token.prototype.evenSnap = function(dest){
     else{
 		if(Math.sign(slope) == 1){
     		if(slope < 1.732){
-    			console.log("Hex 6");
+    			// console.log("Hex 6");
     			vertexOffset = vertexFind(6, canvas.grid.grid.w, canvas.grid.grid.h)
     		}
     		else{
-    			console.log("Hex 5")
+    			// console.log("Hex 5")
     			vertexOffset = vertexFind(5, canvas.grid.grid.w, canvas.grid.grid.h)
     		}
     	}
     	else{
     		if(slope > -1.732){
-    			console.log("Hex 4")
-    			vertexOffset = vertexFind(4, this.w, this.h)
+    			// console.log("Hex 4")
+    			vertexOffset = vertexFind(4, canvas.grid.grid.w, canvas.grid.grid.h)
     		}
     		else{
-    			console.log("Hex 5")
-    			vertexOffset = vertexFind(5, this.w, this.h)
+    			// console.log("Hex 5")
+    			vertexOffset = vertexFind(5, canvas.grid.grid.w, canvas.grid.grid.h)
     		}
     	}
     }
 
-    // this.icon.pivot.y = -(canvas.grid.grid.h * 0.125 * 2);
+    //set the pivot here in addition to when the canvas is rendered
+    //this is to ensure the pivot change happens after a token is changed and moved
+    this.icon.pivot.y = -(canvas.grid.grid.h * 0.125 * 2);
     //remove the offset from the newly discovered true center and store
     return {
     	x: snappedCenter.x - offset.x + vertexOffset.x,
@@ -197,6 +202,8 @@ let pointHexVertexScalar = [
 	[-0.5, 0.25]
 	];
 
+//calculate the offset to get to the vertex in the given region given the
+//width and height of a hex in this scene
 function vertexFind(region, width, height){
 	return {
 		x: pointHexVertexScalar[region - 1][0] * width,
