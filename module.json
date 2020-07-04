@@ -1,0 +1,12 @@
+{
+  "name": "hex-size-support",
+  "title": "Hex Size Support",
+  "description": "Improves support for hexagon tokens of sizes greater than one",
+  "author": "Ourobor",
+  "version": "0.1.0",
+  "minimumCoreVersion": "0.6.0",
+  "esmodules": [
+  	"modules/hooks.js",
+  	"modules/HexToken.js"
+  ]
+}
