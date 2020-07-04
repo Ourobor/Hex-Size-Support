@@ -14,6 +14,10 @@ The **Use Even Snapping** setting switches the rules to instead snap the center 
 Please be aware that this setting does not check which snap points are valid for your token. Half of the snap-points are only valid for one orientation of the token.
 ![Alt Snapping Demo](https://i.imgur.com/abYXb9h.gif)
 
+# Install
+
+Use the manifest url: https://raw.githubusercontent.com/Ourobor/Hex-Size-Support/master/module.json
+
 # Tips
 
 * Tokens should be cropped to the exact size of the art, no extra transparent area should be needed.
