@@ -7,5 +7,8 @@
   "minimumCoreVersion": "0.6.0",
   "esmodules": [
   	"modules/hooks.js"
-  ]
+  ],
+  "url": "https://github.com/Ourobor/Hex-Size-Support",
+  "manifest": "https://raw.githubusercontent.com/Ourobor/Hex-Size-Support/master/module.json",
+  "download": ""
 }
