@@ -15,3 +15,14 @@ Please be aware that this setting does not check which snap points are valid for
 ![Alt Snapping Demo](https://i.imgur.com/abYXb9h.gif)
 
 # Tips
+
+* Tokens should be cropped to the exact size of the art, no extra transparent area should be needed.
+
+* Changing the height of the token should not effect the logic as long as it doesn't change the size of the token's image, so feel free to resize the token to get the clickable area to match better.
+
+
+# Known Issues
+
+* Even snapping doesn't work correctly for hex column grids. 
+
+* The hitbox/clickable area for even tokens isn't adjusted for the changed pivot leaving a weird area at the top
