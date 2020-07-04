@@ -1,5 +1,10 @@
 # Hex-Size-Support
-A Foundry VTT add on module that allows the use of alternative snapping logic for hex tiles of a size greater than one hex, specifically for token sizes for the TTRPG Lancer.
+A Foundry VTT add-on module that allows the use of alternative snapping logic for hex tiles of a size greater than one hex, specifically for token sizes for the TTRPG Lancer.
+
+# Install
+When installing an Add-On Module in Foundry, use the manifest url: https://raw.githubusercontent.com/Ourobor/Hex-Size-Support/master/module.json.
+
+Alternatively download the zip of the project and unzip it in the modules directory of your Foundry VTT install.
 
 # How it works
 This module adds a new set of configuration options for a token that change snapping logic
@@ -13,10 +18,6 @@ The **Use Even Snapping** setting switches the rules to instead snap the center 
 
 Please be aware that this setting does not check which snap points are valid for your token. Half of the snap-points are only valid for one orientation of the token.
 ![Alt Snapping Demo](https://i.imgur.com/abYXb9h.gif)
-
-# Install
-
-Use the manifest url: https://raw.githubusercontent.com/Ourobor/Hex-Size-Support/master/module.json
 
 # Tips
 
