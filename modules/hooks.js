@@ -1,6 +1,3 @@
-import { HexToken } from './HexToken.js'
-const moduleTM = "module.";
-
 Hooks.on("renderTokenConfig", async (app, html) => {
 	console.log("Token Config")
 	console.log(app)
