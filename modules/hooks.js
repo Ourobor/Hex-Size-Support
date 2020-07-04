@@ -1,28 +1,6 @@
 import { HexToken } from './HexToken.js'
 const moduleTM = "module.";
 
-Hooks.on("init", () => {
-
-})
-
-//    this.icon.pivot.y = -(canvas.grid.grid.h * 0.125 * 2);
-// Hooks.on("canvasInit", (canvas) => {
-// 	console.log(game);
-// 	console.log(game.scenes)
-// 	for(let scene of game.scenes){
-// 		for(let token of scene.data.tokens){
-// 			console.log(token)
-// 			if(token.flags.hex-size-support != undefined){
-// 				if(token.flags.hex-size-support.evenSnap == true){
-// 					token.icon.pivot.y = -(canvas.grid.grid.h * 0.125 * 2);
-// 				}
-// 			}
-// 		}
-// 	}
-// });
-
-
-
 Hooks.on("renderTokenConfig", async (app, html) => {
 	console.log("Token Config")
 	console.log(app)
