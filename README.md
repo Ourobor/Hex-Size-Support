@@ -25,9 +25,9 @@ Please be aware that this setting does not check which snap points are valid for
 
 * Changing the height of the token should not effect the logic as long as it doesn't change the size of the token's image, so feel free to resize the token to get the clickable area to match better.
 
+* I found that I needed to fudge the width for column grids to get the token resized correctly. 2.6 width for size 3, 3.5 for size 4.
+
 
 # Known Issues
 
-* Even snapping doesn't work correctly for hex column grids. 
-
-* The hitbox/clickable area for even tokens isn't adjusted for the changed pivot leaving a weird area at the top
+* The hitbox/clickable area for even tokens isn't adjusted for the changed pivot leaving a weird area at the top. This is probably going to stay since I would prefer not touching any more stuff than I need to.
