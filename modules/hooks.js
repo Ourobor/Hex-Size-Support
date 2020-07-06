@@ -136,52 +136,17 @@ Token.prototype.evenSnap = function(dest){
 
     let vertexOffset = {x:0, y:0}
 
-    //determine if the point is above the center or below
-    if(tokenCenter.y < snappedCenter.y){
-    	
-    	if(Math.sign(slope) == 1){
-    		if(slope < 1.732){
-    			// console.log("Hex 3");
-    			vertexOffset = vertexFind(3, canvas.grid.grid.w, canvas.grid.grid.h)
-    		}
-    		else{
-    			// console.log("Hex 2");
-    			vertexOffset = vertexFind(2, canvas.grid.grid.w, canvas.grid.grid.h)
-    		}
-    	}
-    	else{
-    		if(slope > -1.732){
-    			// console.log("Hex 1");
-    			vertexOffset = vertexFind(1, canvas.grid.grid.w, canvas.grid.grid.h)
-    		}
-    		else{
-    			// console.log("Hex 2");
-    			vertexOffset = vertexFind(2, canvas.grid.grid.w, canvas.grid.grid.h)
-    		}
-    	}
+    let sector = -1;
+    const columns = canvas.grid.grid.columns;
+    if(columns){
+    	sector = findSectorFlat(tokenCenter.x > snappedCenter.x, slope);
     }
-    else{
-		if(Math.sign(slope) == 1){
-    		if(slope < 1.732){
-    			// console.log("Hex 6");
-    			vertexOffset = vertexFind(6, canvas.grid.grid.w, canvas.grid.grid.h)
-    		}
-    		else{
-    			// console.log("Hex 5")
-    			vertexOffset = vertexFind(5, canvas.grid.grid.w, canvas.grid.grid.h)
-    		}
-    	}
-    	else{
-    		if(slope > -1.732){
-    			// console.log("Hex 4")
-    			vertexOffset = vertexFind(4, canvas.grid.grid.w, canvas.grid.grid.h)
-    		}
-    		else{
-    			// console.log("Hex 5")
-    			vertexOffset = vertexFind(5, canvas.grid.grid.w, canvas.grid.grid.h)
-    		}
-    	}
-    }
+    else
+    {
+    	sector = findSectorPointy(tokenCenter.y < snappedCenter.y, slope);
+	}
+
+    vertexOffset = vertexFind(sector, canvas.grid.grid.w, canvas.grid.grid.h, columns);
 
     //set the pivot here in addition to when the canvas is rendered
     //this is to ensure the pivot change happens after a token is changed and moved
@@ -190,6 +155,68 @@ Token.prototype.evenSnap = function(dest){
     return {
     	x: snappedCenter.x - offset.x + vertexOffset.x,
     	y: snappedCenter.y - offset.y + vertexOffset.y //+ (canvas.grid.grid.h * 0.125)
+    }
+}
+
+function findSectorPointy(above, slope){
+	if(above){
+    	if(slope > 0 && slope < 1.732){
+			console.log("hex 3");
+			return 3;
+    	}
+    	else if(slope < 0 && slope > -1.732){
+    		console.log("Hex 1");
+    		return 1;
+    	}
+    	else{
+    		console.log("Hex 2");
+    		return 2;
+    	}
+    }
+    else{
+    	if(slope > 0 && slope < 1.732){
+			console.log("Hex 6");
+			return 6;
+    	}
+    	else if(slope < 0 && slope > -1.732){
+    		console.log("Hex 4")
+    		return 4;
+    	}
+    	else{
+    		console.log("Hex 5")
+    		return 5;
+    	}
+    }
+}
+
+function findSectorFlat(right, slope){
+	if(right){
+    	if(slope > 0.577){
+			console.log("hex 3");
+			return 3;
+    	}
+    	else if(slope < -0.577){
+    		console.log("Hex 5");
+    		return 5;
+    	}
+    	else{
+    		console.log("Hex 4");
+    		return 4;
+    	}
+    }
+    else{
+    	if(slope > 0.577){
+			console.log("hex 6");
+			return 6;
+    	}
+    	else if(slope < -0.577){
+    		console.log("Hex 2");
+    		return 2;
+    	}
+    	else{
+    		console.log("Hex 1");
+    		return 1;
+    	}
     }
 }
 
@@ -202,14 +229,28 @@ let pointHexVertexScalar = [
 	[-0.5, 0.25]
 	];
 
+let flatHexVertexScalar = [
+	[-0.5, 0], 
+	[-0.25, -0.5], 
+	[0.25, -0.5], 
+	[0.5, 0], 
+	[0.25, 0.5], 
+	[-0.25, 0.5]];
+
+
 //calculate the offset to get to the vertex in the given region given the
-//width and height of a hex in this scene
-function vertexFind(region, width, height){
-	return {
-		x: pointHexVertexScalar[region - 1][0] * width,
-		y: pointHexVertexScalar[region - 1][1] * height
+//width and height of a hex in this scene and if the scene has pointy/flat topped hexes
+function vertexFind(region, width, height, flatHex ){
+	if(flatHex){
+		return {
+			x: flatHexVertexScalar[region - 1][0] * width,
+			y: flatHexVertexScalar[region - 1][1] * height
+		}
+	}
+	else{
+		return {
+			x: pointHexVertexScalar[region - 1][0] * width,
+			y: pointHexVertexScalar[region - 1][1] * height
+		}
 	}
 }
-
-180.5
-182
