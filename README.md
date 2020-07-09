@@ -23,7 +23,7 @@ Please be aware that this setting does not check which snap points are valid for
 
 * Tokens should be cropped to the exact size of the art, no extra transparent area should be needed.
 
-* Changing the height of the token should not effect the logic as long as it doesn't change the size of the token's image, so feel free to resize the token to get the clickable area to match better.
+* Changing the height of the token should not affect the logic as long as it doesn't change the size of the token's image, so feel free to resize the token to get the clickable area to match better.
 
 * I found that I needed to fudge the width for column grids to get the token resized correctly. 2.6 width for size 3, 3.5 for size 4.
 
