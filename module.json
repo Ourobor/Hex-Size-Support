@@ -1,12 +1,15 @@
 {
   "name": "hex-size-support",
-  "title": "Hex Size Support",
-  "description": "Improves support for hexagon tokens of sizes greater than one",
+  "title": "Hex Token Size Support",
+  "description": "Improves support for hexagon tokens of sizes greater than one by altering the grid snapping rules",
   "author": "Ourobor",
-  "version": "0.1.3",
+  "version": "0.2.0",
   "minimumCoreVersion": "0.6.0",
   "esmodules": [
-  	"modules/hooks.js"
+  	"modules/hooks.js",
+    "modules/ruler-changes.js",
+    "modules/helpers.js",
+    "modules/token-changes.js"
   ],
   "url": "https://github.com/Ourobor/Hex-Size-Support",
   "manifest": "https://raw.githubusercontent.com/Ourobor/Hex-Size-Support/master/module.json",
