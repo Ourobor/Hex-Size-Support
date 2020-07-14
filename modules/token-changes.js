@@ -4,9 +4,11 @@ import { findNearestVertex } from './helpers.js'
 Token.prototype.refresh = (function () {
 	const cached = Token.prototype.refresh;
 	return function () {
-		if(this.getFlag("hex-size-support","evenSnap") == true){
-			this.icon.pivot.y = -(canvas.grid.grid.h * 0.125 * 2);
-		}
+		// if(this.getFlag("hex-size-support","evenSnap") == true){
+			// this.icon.pivot.y = -(canvas.grid.grid.h * 0.125 * 2);
+			this.icon.pivot.y = this.getFlag("hex-size-support","pivoty") || 0.0;
+			this.icon.pivot.x = this.getFlag("hex-size-support","pivotx") || 0.0;
+		// }
 		const p = cached.apply(this, arguments);
 		return p;
 	};
@@ -74,7 +76,9 @@ Token.prototype.oddSnap = function(dest){
 
     //set the pivot to zero to ensure that pivot is changed correctly if a token is changed from
     //even snapping to odd snapping
-	this.icon.pivot.y = 0;
+    this.icon.pivot.y = this.getFlag("hex-size-support","pivoty") || 0.0;
+	this.icon.pivot.x = this.getFlag("hex-size-support","pivotx") || 0.0;
+	// this.icon.pivot.y = 0;
 
     //remove the offset from the newly discovered true center and store
     return {
@@ -104,7 +108,9 @@ Token.prototype.evenSnap = function(dest){
 
     //set the pivot here in addition to when the canvas is rendered
     //this is to ensure the pivot change happens after a token is changed and moved
-    this.icon.pivot.y = -(canvas.grid.grid.h * 0.125 * 2);
+    // this.icon.pivot.y = -(canvas.grid.grid.h * 0.125 * 2);
+    this.icon.pivot.y = this.getFlag("hex-size-support","pivoty") || 0.0;
+	this.icon.pivot.x = this.getFlag("hex-size-support","pivotx") || 0.0;
     //remove the offset from the newly discovered true center and store
     return {
     	x: snappedCenter.x - offset.x + vertexOffset.x,
@@ -115,6 +121,10 @@ Token.prototype.evenSnap = function(dest){
 //Handle dealing with shifting a token, this fixes issues with using arrow keys
 Token.prototype._getShiftedPositionCached = Token.prototype._getShiftedPosition;
 Token.prototype._getShiftedPosition = function(dx, dy){
+	//conditionally lock out arrow key movement for a token
+	if(this.locked == true){
+		return {x: this.x, y:this.y}
+	}
 	//run original code if no flag for alt-snapping
 	if(!this.getFlag("hex-size-support", "altSnapping") == true){
 		return this._getShiftedPositionCached(dx,dy);
