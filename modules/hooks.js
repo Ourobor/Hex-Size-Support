@@ -15,6 +15,14 @@ Hooks.on("renderTokenConfig", async (app, html) => {
 		<hr>
 		<h3 class="form-header">Hex Token Size Support</h3>
 		<div class="form-group">
+			<label>Token Display Options</label>
+			<div class="form-fields">
+				<button type="button" id="configAdvHex" title="Token Display Options">
+					<i class="fas fa-draw-polygon fa-fw"></i>
+				</button>
+			</div>
+		</div>
+		<div class="form-group">
 			<label class="checkbox">Use Alternative Snapping</label>
 			<input type="checkbox" name="flags.hex-size-support.altSnapping"
 			       ${flags.altSnapping ? 'checked' : ''}>
@@ -24,19 +32,17 @@ Hooks.on("renderTokenConfig", async (app, html) => {
 			<input type="checkbox" name="flags.hex-size-support.evenSnap"
 				${flags.evenSnap ? 'checked' : ''}>
 		</div>
-		<div class="form-group">
-			<button type="button" id="configAdvHex" title="Configure Advanced options">
-				<i class="fas fa-draw-polygon fa-fw"></i> Configure Advanced Hex Options
-			</button>
-		</div>
 		`));
 	let button = positionTab.find("#configAdvHex");
 	button.click(() => {
 		app.minimize();
 		//render the config thingie
+		console.log(app.object)
 		let foo = new HexTokenConfig(app.object, app).render(true);
 	});
-	// console.log(positionTab);
+	
+	//allow the range slider to have higher precision
+	app.form.elements.scale.step = "0.01"
 
 });
 

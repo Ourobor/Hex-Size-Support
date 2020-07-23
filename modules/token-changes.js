@@ -4,12 +4,58 @@ import { findNearestVertex } from './helpers.js'
 Token.prototype.refresh = (function () {
 	const cached = Token.prototype.refresh;
 	return function () {
-		// if(this.getFlag("hex-size-support","evenSnap") == true){
-			// this.icon.pivot.y = -(canvas.grid.grid.h * 0.125 * 2);
+
+		//handle rendering temporary pivots used by the config controller
+		if(this.data.tempPivot != undefined){
+			this.icon.pivot.y = this.data.tempPivot.y || 0.0;
+			this.icon.pivot.x = this.data.tempPivot.x || 0.0;	
+		}
+		else{
 			this.icon.pivot.y = this.getFlag("hex-size-support","pivoty") || 0.0;
 			this.icon.pivot.x = this.getFlag("hex-size-support","pivotx") || 0.0;
-		// }
+		}
+
 		const p = cached.apply(this, arguments);
+
+
+		//handle rerendering the borders for custom border offsets and resizing
+		console.log(this.border)
+		// this.border.clear()
+		// this.border.lineStyle(4, 0x000000, 0.8).drawPolygon(xyPoints);
+		// this.border.lineStyle(2, borderColor || 0xFF9829, 1.0).drawPolygon(xyPoints);
+
+		// //clear the borders and redraw them, if applicable
+		// const g = canvas.grid.grid;
+
+		// const borderColor = this._getBorderColor();
+		// if(!!borderColor){
+		// 	const size2 = [
+		// 	[0.5, 1.5],
+		// 	[-0.0, 1.25],
+		// 	[-0.0, 0.75],
+		// 	[-0.5, 0.5],
+		// 	[-0.5, -0.0],
+		// 	[-0.0, -0.25],
+		// 	[0.5, -0.0],
+		// 	[1.0, -0.25],
+		// 	[1.5, -0.0],
+		// 	[1.5, 0.5],
+		// 	[1.0, 0.75],
+		// 	[1.0, 1.25],
+		// 	[0.5, 1.5]]
+
+		// 	//remap the coordinates to the grid's width/height
+		// 	let xyPoints = size2.reduce((arr, p) => {
+		//       return arr.concat([-1 + (canvas.grid.grid.w * p[0]), -1 + (canvas.grid.grid.h * p[1])]);
+		//     }, []);
+
+		// 	this.hitArea = new PIXI.Polygon(xyPoints)
+			
+		// 	this.border.clear()
+		// 	this.border.lineStyle(4, 0x000000, 0.8).drawPolygon(xyPoints);
+		// 	this.border.lineStyle(2, borderColor || 0xFF9829, 1.0).drawPolygon(xyPoints);
+		// }
+
 		return p;
 	};
 })();

@@ -3,7 +3,7 @@
   "title": "Hex Token Size Support",
   "description": "Improves support for hexagon tokens of sizes greater than one by altering the grid snapping rules",
   "author": "Ourobor",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "minimumCoreVersion": "0.6.0",
   "esmodules": [
   	"modules/hooks.js",
