@@ -19,7 +19,7 @@ Token.prototype.refresh = (function () {
 
 
 		//handle rerendering the borders for custom border offsets and resizing
-		console.log(this.border)
+		// console.log(this.border)
 		// this.border.clear()
 		// this.border.lineStyle(4, 0x000000, 0.8).drawPolygon(xyPoints);
 		// this.border.lineStyle(2, borderColor || 0xFF9829, 1.0).drawPolygon(xyPoints);
