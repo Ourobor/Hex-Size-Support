@@ -9,16 +9,22 @@ export class HexTokenConfig extends FormApplication {
     	//prevent the arrowkeys from moving the token by setting a locking value
     	this.object.locked = true;
     	this.object.data.tempPivot = {x: this.object.getFlag('hex-size-support','pivotx'), y:this.object.getFlag('hex-size-support','pivoty')}
+
+
+    	console.log(this)
 	}
 
 	static get defaultOptions() {
 		return mergeObject(super.defaultOptions, {
 			classes: ["sheet", "scene-sheet"],
 			template: "modules/hex-size-support/templates/hex-token-config.html",
-			width: 420
+			width: 420,
+			height: "auto",
+			tabs: [{navSelector: ".tabs", contentSelector: "form", initial: "image"}]
 		});
 	}
   /* -------------------------------------------- */
+
 
   /** @override */
   async getData(options) {
@@ -32,12 +38,25 @@ export class HexTokenConfig extends FormApplication {
   }
 
   /** @override */
+  get title(){
+  	return "Hex Token Configureation Wizard"
+  }
+
+//------------------------------------------------------------
+//---------------Listeners------------------------------------
+//------------------------------------------------------------
+
+ /** @override */
   activateListeners(html) {
     super.activateListeners(html);
     this._keyHandler = this._keyHandler || this._onKeyDown.bind(this);
+    html.find("#boop").click(this._boop.bind(this))
     document.addEventListener("keydown", this._keyHandler);
   }
 
+  _boop(event){
+  	console.log(event)
+  }
 
   _onKeyDown(event) {
     const key = game.keyboard.getKey(event);
@@ -140,8 +159,6 @@ export class HexTokenConfig extends FormApplication {
 
   /** @override */
   async close(options) {
-  	console.log("close")
-
     document.removeEventListener("keydown", this._keyHandler);
     document.removeEventListener("wheel", this._wheelHandler);
     this._keyHandler = this._wheelHandler = null;

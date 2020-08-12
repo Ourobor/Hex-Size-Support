@@ -4,7 +4,7 @@ A Foundry VTT add-on module that allows the use of alternative snapping logic fo
 # Install
 **Please Note: This addon is currently in development. It does not contain all intended features and might not work correctly. Please report any bugs or issues by submitting an issue**
 
-When installing an Add-On Module in Foundry, use the manifest url: https://raw.githubusercontent.com/Ourobor/Hex-Size-Support/master/module.json.
+When installing an Add-On Module in Foundry, use the manifest url: https://raw.githubusercontent.com/Ourobor/Hex-Size-Support/master/module.json
 
 Alternatively download the zip of the project and unzip it in the modules directory of your Foundry VTT install.
 

@@ -1,18 +1,37 @@
 <form>
-	<div class="form-group">
-		<label class="checkbox">Token Pivot X</label>
-		<input type="text" name="pivotx" value="{{ pivotX }}" data-dtype="Number"/>
+	<nav class="sheet-tabs tabs">
+		<a class="item" data-tab="image"><i class="fas fa-user"></i>Image and Template</a>
+		<a class="item" data-tab="snapping"><i class="fas fa-expand"></i>Border and Snapping</a>
+		<a class="item" data-tab="position"><i class="fas fa-map-marker-alt"></i>Art Positioning</a>
+    </nav>
+	<hr/>
+
+	<div class="tab" data-tab="image">
+		<p class="notes">Configure the token's art and optionally select an existing template</p>
 	</div>
-	<div class="form-group">
-		<label class="checkbox">Token Pivot Y</label>
-		<input type="text" name="pivoty" value="{{ pivotY }}" data-dtype="Number"/>
+	<div class="tab" data-tab="snapping">
+		<p class="notes">Configure the border and snapping rules for the token</p>
+		<button id="boop" type="button">Beep</button>
 	</div>
 
-	<div class="form-group">
-		<label class="checkbox">Token Scale</label>
-		<input type="text" name="scale" value="{{ scale }}" data-dtype="Number"/>
+	<div class="tab" data-tab="position">
+		<p class="notes">Configure the positioning of the art to match the border. Use arrow keys to shift the token's art by one pixel in that direct. Alt+Up/Alt+Down to scale the art up/down</p>
+		<div class="form-group">
+			<label class="checkbox">Token Pivot X</label>
+			<input type="text" name="pivotx" value="{{ pivotX }}" data-dtype="Number"/>
+		</div>
+		<div class="form-group">
+			<label class="checkbox">Token Pivot Y</label>
+			<input type="text" name="pivoty" value="{{ pivotY }}" data-dtype="Number"/>
+		</div>
+
+		<div class="form-group">
+			<label class="checkbox">Token Scale</label>
+			<input type="text" name="scale" value="{{ scale }}" data-dtype="Number"/>
+		</div>
+		<button type="submit" id="configAdvHex" title="Save Changes">
+			<i class="fas fa-draw-polygon fa-fw"></i> Save Changes
+		</button>
 	</div>
-	<button type="submit" id="configAdvHex" title="Save Changes">
-		<i class="fas fa-draw-polygon fa-fw"></i> Save Changes
-	</button>
+
 </form>

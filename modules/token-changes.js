@@ -17,44 +17,136 @@ Token.prototype.refresh = (function () {
 
 		const p = cached.apply(this, arguments);
 
+		const borderSize = this.getFlag("hex-size-support", "border");
 
 		//handle rerendering the borders for custom border offsets and resizing
-		// console.log(this.border)
-		// this.border.clear()
-		// this.border.lineStyle(4, 0x000000, 0.8).drawPolygon(xyPoints);
-		// this.border.lineStyle(2, borderColor || 0xFF9829, 1.0).drawPolygon(xyPoints);
+		if(borderSize != undefined){
 
-		// //clear the borders and redraw them, if applicable
-		// const g = canvas.grid.grid;
+			const borderColor = this._getBorderColor();
 
-		// const borderColor = this._getBorderColor();
-		// if(!!borderColor){
-		// 	const size2 = [
-		// 	[0.5, 1.5],
-		// 	[-0.0, 1.25],
-		// 	[-0.0, 0.75],
-		// 	[-0.5, 0.5],
-		// 	[-0.5, -0.0],
-		// 	[-0.0, -0.25],
-		// 	[0.5, -0.0],
-		// 	[1.0, -0.25],
-		// 	[1.5, -0.0],
-		// 	[1.5, 0.5],
-		// 	[1.0, 0.75],
-		// 	[1.0, 1.25],
-		// 	[0.5, 1.5]]
+			const gridW = canvas.grid.grid.w;
+			const gridH = canvas.grid.grid.h;
 
-		// 	//remap the coordinates to the grid's width/height
-		// 	let xyPoints = size2.reduce((arr, p) => {
-		//       return arr.concat([-1 + (canvas.grid.grid.w * p[0]), -1 + (canvas.grid.grid.h * p[1])]);
-		//     }, []);
+			if(!!borderColor){
 
-		// 	this.hitArea = new PIXI.Polygon(xyPoints)
-			
-		// 	this.border.clear()
-		// 	this.border.lineStyle(4, 0x000000, 0.8).drawPolygon(xyPoints);
-		// 	this.border.lineStyle(2, borderColor || 0xFF9829, 1.0).drawPolygon(xyPoints);
-		// }
+				const size2 = [
+				[0.0, 1.0],
+				[-0.5, 0.75],
+				[-0.5, 0.25],
+				[-1.0, 0.0],
+				[-1.0, -0.5],
+				[-0.5, -0.75],
+				[0.0, -0.5],
+				[0.5, -0.75],
+				[1.0, -0.5],
+				[1.0, 0.0],
+				[0.5, 0.25],
+				[0.5, 0.75],
+				[0.0, 1.0]]
+
+				const size3 = [
+				[-1.5, -0.25],
+				[-1.0, -0.5 ],
+				[-1.0, -1.0 ],
+				[-0.5, -1.25],
+				[ 0.0, -1.0 ],
+				[ 0.5, -1.25],
+				[ 1.0, -1.0 ],
+				[ 1.0, -0.5 ],
+				[ 1.5, -0.25],
+				[ 1.5,  0.25],
+				[ 1.0,  0.5 ],
+				[ 1.0,  1.0 ],
+				[ 0.5,  1.25],
+				[ 0.0,  1.0 ],
+				[-0.5,  1.25],
+				[-1.0,  1.0 ],
+				[-1.0,  0.5 ],
+				[-1.5,  0.25],
+				[-1.5, -0.25]
+				]
+
+				const size4 = [
+				[-2.0,  0.0 ],
+				[-2.0, -0.5 ],
+				[-1.5, -0.75],
+				[-1.5, -1.25],
+				[-1.0, -1.5 ],
+				[-0.5, -1.25],
+				[ 0.0, -1.5 ],
+				[ 0.5, -1.25],
+				[ 1.0, -1.5 ],
+				[ 1.5, -1.25],
+				[ 1.5, -0.75],
+				[ 2.0, -0.5 ],
+				[ 2.0,  0.0 ],//halfway
+				[ 1.5,  0.25],
+				[ 1.5,  0.75],
+				[ 1.0,  1.0 ],
+				[ 1.0,  1.5 ],
+				[ 0.5,  1.75],
+				[ 0.0,  1.5 ],
+				[-0.5,  1.75],
+				[-1.0,  1.5 ],
+				[-1.0,  1.0 ],
+				[-1.5,  0.75],
+				[-1.5,  0.25],
+				[-2.0,  0.0 ]
+				]
+
+				let height = 1.0;
+				let width = 1.0;
+
+				let points;
+				if(borderSize == 2){
+					height = 1.75 * gridH
+ 					width = 2.0 * gridW
+					points = size2;
+				}
+				else if(borderSize == 3){
+					height = 2.75 * gridH
+ 					width = 3 * gridW
+					points = size3;
+				}
+				else if(borderSize == 4){
+					height = 3.75 * gridH
+ 					width = 4 * gridW
+					points = size4;
+				}
+				else{
+					return p
+				}
+
+				//remap the coordinates to the grid's width/height
+				let xyPoints = points.map((p) => {
+			      return [(gridW * p[0]), (gridH * p[1])];
+			    });
+
+			    //rotate the coordinates
+			    //this is required because the rotation attribute of the border only rotates the graphics, not the hit area
+			    //and the hit area is only defined by a collection of points
+			    const cosTheta = Math.cos(this.data.rotation * 0.0174533);
+			    const sinTheta = Math.sin(this.data.rotation * 0.0174533);
+
+			    let rotatedPoints = xyPoints.map( (point) => {
+			    	let x = cosTheta * point[0] + (-1 * sinTheta * point[1])
+			    	let y = sinTheta * point[0] + cosTheta*point[1]
+			    	return [x,y]
+			    })
+			    
+			    let shiftedPoints = rotatedPoints.map((point) => {
+			    	const x = point[0] + width / 2
+			    	const y = point[1] + height / 2
+			    	return [x,y]
+			    	})
+
+				this.hitArea = new PIXI.Polygon(shiftedPoints.flat())
+				
+				this.border.clear()
+				this.border.lineStyle(4, 0x000000, 0.8).drawPolygon(shiftedPoints.flat());
+				this.border.lineStyle(2, borderColor || 0xFF9829, 1.0).drawPolygon(shiftedPoints.flat());
+			}
+		}
 
 		return p;
 	};

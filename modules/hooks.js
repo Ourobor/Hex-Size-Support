@@ -15,7 +15,7 @@ Hooks.on("renderTokenConfig", async (app, html) => {
 		<hr>
 		<h3 class="form-header">Hex Token Size Support</h3>
 		<div class="form-group">
-			<label>Token Display Options</label>
+			<label>Launch Token Config</label>
 			<div class="form-fields">
 				<button type="button" id="configAdvHex" title="Token Display Options">
 					<i class="fas fa-draw-polygon fa-fw"></i>
@@ -35,14 +35,19 @@ Hooks.on("renderTokenConfig", async (app, html) => {
 		`));
 	let button = positionTab.find("#configAdvHex");
 	button.click(() => {
-		app.minimize();
+		// app.minimize();
+
 		//render the config thingie
-		console.log(app.object)
 		let foo = new HexTokenConfig(app.object, app).render(true);
+
+		app.close()
 	});
 	
 	//allow the range slider to have higher precision
 	app.form.elements.scale.step = "0.01"
+
+	//update the form to ensure it doesn't have scrollbars caused by adding html after the height is determined
+	app.setPosition({height:"auto"})
 
 });
 
