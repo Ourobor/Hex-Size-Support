@@ -24,7 +24,6 @@ Token.prototype.refresh = (function () {
 		let borderSize = this.data?.tempHexValues?.borderSize || this.getFlag("hex-size-support", "borderSize");
 
 		let alwaysShowBorder = this.getFlag("hex-size-support", "alwaysShowBorder")
-		console.log(alwaysShowBorder)
 
 		//handle rerendering the borders for custom border offsets and resizing
 		if(alwaysShowBorder == true || (borderSize != undefined && borderSize != 1)){
@@ -40,7 +39,6 @@ Token.prototype.refresh = (function () {
 			}
 
 			if(!!borderColor){
-				console.log(borderColor)
 				const size2 = [
 				[0.0, 1.0],
 				[-0.5, 0.75],
@@ -170,6 +168,14 @@ Token.prototype.refresh = (function () {
 				this.border.clear()
 				this.border.lineStyle(4, 0x000000, 0.8).drawPolygon(shiftedPoints.flat());
 				this.border.lineStyle(2, borderColor || 0xFF9829, 1.0).drawPolygon(shiftedPoints.flat());
+
+				//Muck around with layering to get the border on top
+				if(alwaysShowBorder){
+					if(this.sortableChildren == false){
+						this.sortableChildren = true;
+					}
+					this.border.zIndex = 10;
+				}
 			}
 		}
 
