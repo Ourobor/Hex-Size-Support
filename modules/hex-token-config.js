@@ -52,6 +52,7 @@ export class HexTokenConfig extends FormApplication {
     	borderType: this.object.getFlag('hex-size-support','borderSize'),
     	altSnapping: this.object.getFlag('hex-size-support','altSnapping'),
     	vertexSnap: this.object.getFlag('hex-size-support','evenSnap'),
+      alwaysShowBorder: this.object.getFlag('hex-size-support','alwaysShowBorder'),
       templates: templateArray
     };
   }
@@ -285,6 +286,7 @@ export class HexTokenConfig extends FormApplication {
 		await token.setFlag("hex-size-support","borderSize", formData.borderType);
 		await token.setFlag("hex-size-support","altSnapping", formData.altSnapping);
 		await token.setFlag("hex-size-support","evenSnap", formData.evenSnap);
+    await token.setFlag("hex-size-support","alwaysShowBorder", formData.alwaysShowBorder);
 
 		await token.update(updateData);
 	}

@@ -23,25 +23,24 @@ Token.prototype.refresh = (function () {
 		//get the border size
 		let borderSize = this.data?.tempHexValues?.borderSize || this.getFlag("hex-size-support", "borderSize");
 
-		//handle rerendering the borders for custom border offsets and resizing
-		if(borderSize != undefined && borderSize != 1){
+		let alwaysShowBorder = this.getFlag("hex-size-support", "alwaysShowBorder")
+		console.log(alwaysShowBorder)
 
+		//handle rerendering the borders for custom border offsets and resizing
+		if(alwaysShowBorder == true || (borderSize != undefined && borderSize != 1)){
 			let borderColor = this._getBorderColor();
-			console.log(borderColor)
 
 			const gridW = canvas.grid.grid.w;
 			const gridH = canvas.grid.grid.h;
 
+
 			//override null if the border is always to be shown
-			if(this.getFlag("hex-size-support", "alwaysShowBorder") == true && !borderColor){
+			if(alwaysShowBorder == true && !borderColor){
 				borderColor = 0x56a2d6
-			}
-			else{
-				console.log(borderColor)
 			}
 
 			if(!!borderColor){
-
+				console.log(borderColor)
 				const size2 = [
 				[0.0, 1.0],
 				[-0.5, 0.75],

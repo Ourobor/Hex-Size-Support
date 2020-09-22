@@ -66,7 +66,11 @@
 			<label class="checkbox">Snap to Vertex(size 2/4)</label>
 			<input type="checkbox" name="evenSnap" {{checked vertexSnap}}>
 		</div>
-		<!-- <button id="boop" type="button">Beep</button> -->
+		<div class="form-group">
+			<!-- Turns out, it's a massive rework to get size 1 tokens to work with always showing borders...-->
+			<label class="checkbox">Always show border for size larger 2</label>
+			<input type="checkbox" name="alwaysShowBorder" {{checked alwaysShowBorder}}>
+		</div>
 	</div>
 
 	<div class="tab" data-tab="position">
