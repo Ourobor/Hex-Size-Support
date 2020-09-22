@@ -272,7 +272,6 @@ export class HexTokenConfig extends FormApplication {
 		let token = this.object;
 		let updateData = {scale: formData.scale.toString(), height: token.data.height.toString(), width: token.data.width.toString()};
 
-		await token.update(updateData);
 
 		//for some reason after updating the scale of a token, it becomes a string? And you also can't use
 		//a float as a value to update to for some reason as well, so we just transform it back to a float here
@@ -285,6 +284,8 @@ export class HexTokenConfig extends FormApplication {
 		token.setFlag("hex-size-support","borderSize", formData.borderType);
 		token.setFlag("hex-size-support","altSnapping", formData.altSnapping);
 		token.setFlag("hex-size-support","evenSnap", formData.evenSnap);
+    
+		await token.update(updateData);
 	}
 
 
