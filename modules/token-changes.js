@@ -26,10 +26,19 @@ Token.prototype.refresh = (function () {
 		//handle rerendering the borders for custom border offsets and resizing
 		if(borderSize != undefined && borderSize != 1){
 
-			const borderColor = this._getBorderColor();
+			let borderColor = this._getBorderColor();
+			console.log(borderColor)
 
 			const gridW = canvas.grid.grid.w;
 			const gridH = canvas.grid.grid.h;
+
+			//override null if the border is always to be shown
+			if(this.getFlag("hex-size-support", "alwaysShowBorder") == true && !borderColor){
+				borderColor = 0x56a2d6
+			}
+			else{
+				console.log(borderColor)
+			}
 
 			if(!!borderColor){
 
