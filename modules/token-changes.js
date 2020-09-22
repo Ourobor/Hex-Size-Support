@@ -6,28 +6,32 @@ Token.prototype.refresh = (function () {
 	return function () {
 
 		//handle rendering temporary pivots used by the config controller
-		if(this.data.tempPivot != undefined){
-			this.icon.pivot.y = this.data.tempPivot.y || 0.0;
-			this.icon.pivot.x = this.data.tempPivot.x || 0.0;	
+		if(this.data.tempHexValues?.tempPivot != undefined){
+			this.icon.pivot.y = this.data.tempHexValues.tempPivot.y || 0.0;
+			this.icon.pivot.x = this.data.tempHexValues.tempPivot.x || 0.0;	
 		}
 		else{
 			this.icon.pivot.y = this.getFlag("hex-size-support","pivoty") || 0.0;
 			this.icon.pivot.x = this.getFlag("hex-size-support","pivotx") || 0.0;
 		}
 
+		//execute existing refresh function
 		const p = cached.apply(this, arguments);
 
-		const borderSize = this.getFlag("hex-size-support", "border");
+		//Now handle rewriting the border if needed
+
+		//get the border size
+		let borderSize = this.data?.tempHexValues?.borderSize || this.getFlag("hex-size-support", "borderSize");
 
 		//handle rerendering the borders for custom border offsets and resizing
-		if(borderSize != undefined){
+		if(borderSize != undefined && borderSize != 1){
 
 			const borderColor = this._getBorderColor();
 
 			const gridW = canvas.grid.grid.w;
 			const gridH = canvas.grid.grid.h;
 
-			if(!!borderColor){
+			// if(!!borderColor){
 
 				const size2 = [
 				[0.0, 1.0],
@@ -98,18 +102,19 @@ Token.prototype.refresh = (function () {
 				let width = 1.0;
 
 				let points;
+
 				if(borderSize == 2){
-					height = 1.75 * gridH
+					height = 2.0 * gridH
  					width = 2.0 * gridW
 					points = size2;
 				}
 				else if(borderSize == 3){
-					height = 2.75 * gridH
+					height = 3 * gridH
  					width = 3 * gridW
 					points = size3;
 				}
 				else if(borderSize == 4){
-					height = 3.75 * gridH
+					height = 4 * gridH
  					width = 4 * gridW
 					points = size4;
 				}
@@ -119,14 +124,26 @@ Token.prototype.refresh = (function () {
 
 				//remap the coordinates to the grid's width/height
 				let xyPoints = points.map((p) => {
-			      return [(gridW * p[0]), (gridH * p[1])];
+					if(canvas.grid.grid.columns != true){
+			    		return [(gridW * p[0]), (gridH * p[1])];
+			    	}
+			    	else{
+			    		return [(gridH * p[0]), (gridW * p[1])];
+			    	}
 			    });
+
+				let borderRotationOffset = this.getFlag('hex-size-support', 'borderRotationOffset') || 0.0;
+				if(this.data.tempHexValues != undefined){
+					if(this.data.tempHexValues.borderRotationOffset != undefined){
+						borderRotationOffset = this.data.tempHexValues.borderRotationOffset
+					}
+				}
 
 			    //rotate the coordinates
 			    //this is required because the rotation attribute of the border only rotates the graphics, not the hit area
 			    //and the hit area is only defined by a collection of points
-			    const cosTheta = Math.cos(this.data.rotation * 0.0174533);
-			    const sinTheta = Math.sin(this.data.rotation * 0.0174533);
+			    const cosTheta = Math.cos((this.data.rotation + borderRotationOffset) * 0.0174533);
+			    const sinTheta = Math.sin((this.data.rotation + borderRotationOffset) * 0.0174533);
 
 			    let rotatedPoints = xyPoints.map( (point) => {
 			    	let x = cosTheta * point[0] + (-1 * sinTheta * point[1])
@@ -145,7 +162,7 @@ Token.prototype.refresh = (function () {
 				this.border.clear()
 				this.border.lineStyle(4, 0x000000, 0.8).drawPolygon(shiftedPoints.flat());
 				this.border.lineStyle(2, borderColor || 0xFF9829, 1.0).drawPolygon(shiftedPoints.flat());
-			}
+			// }
 		}
 
 		return p;
@@ -155,7 +172,12 @@ Token.prototype.refresh = (function () {
 //overwrite the left click drop handling to snap the token correctly when you release dragging the token
 Token.prototype._cachedonDragLeftDrop = Token.prototype._onDragLeftDrop;
 Token.prototype._onDragLeftDrop = function(event) {
+
 	let altSnapping = this.getFlag("hex-size-support", "altSnapping");
+	if(this.data?.tempHexValues?.altSnapping != undefined){
+		altSnapping = this.data.tempHexValues.altSnapping
+	}
+
 	if(altSnapping == true){
 		const clones = event.data.clones || [];
 	    const {originalEvent, destination} = event.data;
@@ -171,6 +193,10 @@ Token.prototype._onDragLeftDrop = function(event) {
 
 	      if (!originalEvent.shiftKey) {
 	      	let evenSnapping = this.getFlag("hex-size-support", "evenSnap");
+	      	if(this.data?.tempHexValues?.vertexSnap != undefined){
+				evenSnapping = this.data.tempHexValues.vertexSnap
+			}
+
 	      	if(evenSnapping == false){
 	      		dest = this.oddSnap(dest);
 	      	}
@@ -260,11 +286,18 @@ Token.prototype.evenSnap = function(dest){
 Token.prototype._getShiftedPositionCached = Token.prototype._getShiftedPosition;
 Token.prototype._getShiftedPosition = function(dx, dy){
 	//conditionally lock out arrow key movement for a token
-	if(this.locked == true){
+	if(this.data.tempHexValues?.locked == true){
 		return {x: this.x, y:this.y}
 	}
+	// const altSnapping = this.data?.tempHexValues?.borderSize || this.getFlag("hex-size-support", "altSnapping")
+
+	let altSnapping = this.getFlag("hex-size-support", "altSnapping");
+	if(this.data?.tempHexValues?.altSnapping != undefined){
+		altSnapping = this.data.tempHexValues.altSnapping
+	}
+
 	//run original code if no flag for alt-snapping
-	if(!this.getFlag("hex-size-support", "altSnapping") == true){
+	if(!altSnapping == true){
 		return this._getShiftedPositionCached(dx,dy);
 	}
 	else{
@@ -274,9 +307,15 @@ Token.prototype._getShiftedPosition = function(dx, dy){
 
 		let x = this.x;
 		let y = this.y;
+		
+		let evenSnapping = this.getFlag("hex-size-support", "evenSnap");
+      	if(this.data?.tempHexValues?.vertexSnap != undefined){
+			evenSnapping = this.data.tempHexValues.vertexSnap
+		}
 
 		if(columns != true){
-			if(this.getFlag("hex-size-support","evenSnap")){
+
+			if(evenSnapping){
 				dy += Math.sign(dy) * -0.4;
 				dx += Math.sign(dx) * -0.5;
 			}
@@ -303,7 +342,7 @@ Token.prototype._getShiftedPosition = function(dx, dy){
 			}
 		}
 		else{
-			if(this.getFlag("hex-size-support","evenSnap")){
+			if(evenSnapping){
 				dy += Math.sign(dy) * -0.5;
 				dx += Math.sign(dx) * -0.4;
 			}
@@ -340,7 +379,11 @@ Token.prototype._getShiftedPosition = function(dx, dy){
 	    let targetCenter = this.getCenter(dest.x, dest.y);
 	    let collide = this.checkCollision(targetCenter);
 
-	    let evenSnapping = this.getFlag("hex-size-support", "evenSnap");
+	   
+	 //    let evenSnapping = this.getFlag("hex-size-support", "evenSnap");
+  //     	if(this.data?.tempHexValues?.vertexSnap != undefined){
+		// 	evenSnapping = this.data.tempHexValues.vertexSnap
+		// }
       	if(evenSnapping == false){
       		dest = this.oddSnap(dest);
       	}

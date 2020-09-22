@@ -2,6 +2,8 @@ import { findNearestVertex, findMovementToken } from './helpers.js'
 
 //TODO rewrite this to only run my new stuff if needed
 Ruler.prototype._addWaypoint = function(point) {
+  let center = canvas.grid.getCenter(point.x, point.y);
+
 	//retrieve the token this ruler is measure from if possible
 	let token;
 	if(this.waypoints.length == 0){
@@ -10,29 +12,43 @@ Ruler.prototype._addWaypoint = function(point) {
 	else{
 		token = findMovementToken(this.waypoints[0].x,this.waypoints[0].y);	
 	}
-    let center = canvas.grid.getCenter(point.x, point.y);
 
-    //determine if this is measuring from an even token; even tokens need to have their snapping points offset
-    if(token != undefined && token.getFlag("hex-size-support", "altSnapping") == true && token.getFlag("hex-size-support", "evenSnap") == true){
-	    //get the offset to the vertex
+  //if there is a token under the selected point, check for even/odd
+  if(token != undefined){
+    let evenSnapping = token.getFlag("hex-size-support", "evenSnap");
+    if(token.data?.tempHexValues?.vertexSnap != undefined){
+      evenSnapping = token.data.tempHexValues.vertexSnap
+    }
+
+    //if the even snapping flag is set, we need to offset the position of the first waypoint to a vertex
+    if(evenSnapping){
+      //get the offset to the vertex
     	let offset = findNearestVertex({x: center[0], y: center[1]}, point);
 
     	//update the center
     	center[0] = center[0] + offset.x;
     	center[1] = center[1] + offset.y;
     }
-    this.waypoints.push(new PIXI.Point(center[0], center[1]));
-    this.labels.addChild(new PIXI.Text("", CONFIG.canvasTextStyle));
   }
+  this.waypoints.push(new PIXI.Point(center[0], center[1]));
+  this.labels.addChild(new PIXI.Text("", CONFIG.canvasTextStyle));
+}
 
 
 //overwrite measure to recalculate the location that ruler is going to move the token to, handling alt snapping stuff
 Ruler.prototype.measure = function(destination, {gridSpaces=true}={}) {
-	let token = findMovementToken(this.waypoints[0].x,this.waypoints[0].y);	
+	  let token = findMovementToken(this.waypoints[0].x,this.waypoints[0].y);	
     let center = canvas.grid.getCenter(destination.x, destination.y);
 
+    let evenSnapping;
+    if(token != undefined){
+      evenSnapping = token.getFlag("hex-size-support", "evenSnap");
+      if(token.data?.tempHexValues?.vertexSnap != undefined){
+        evenSnapping = token.data.tempHexValues.vertexSnap
+      }
+    }
     //determine if this is measuring from an even token; even tokens need to have their snapping points offset
-    if(token != undefined && token.getFlag("hex-size-support", "altSnapping") == true && token.getFlag("hex-size-support", "evenSnap") == true){
+    if(evenSnapping){
 	    //get the offset to the vertex
     	let offset = findNearestVertex({x: center[0], y: center[1]}, destination);
 
@@ -41,6 +57,7 @@ Ruler.prototype.measure = function(destination, {gridSpaces=true}={}) {
     else{
     	destination = new PIXI.Point(...canvas.grid.getCenter(destination.x, destination.y));
     }
+
 	//I'm annoyed because above was all that needed to change in the original method >_>
 
     const waypoints = this.waypoints.concat([destination]);
@@ -110,8 +127,14 @@ Ruler.prototype.measure = function(destination, {gridSpaces=true}={}) {
 Ruler.prototype.moveTokenCached = Ruler.prototype.moveToken;
 Ruler.prototype.moveToken = async function() {
     const token = this._getMovementToken();
+
+    let altSnapping = token.getFlag("hex-size-support", "altSnapping");
+    if(token.data?.tempHexValues?.altSnapping != undefined){
+      altSnapping = token.data.tempHexValues.altSnapping
+    }
+    
     //if using alt snapping, just put the center of the token to the waypoint 
-    if(token != undefined && token.getFlag("hex-size-support", "altSnapping") == true){
+    if(token != undefined && altSnapping){
   		let wasPaused = game.paused;
   		if ( wasPaused && !game.user.isGM ) return false;
   		if ( !this.visible || !this.destination ) return false;

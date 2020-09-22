@@ -1,14 +1,28 @@
 
 export class HexTokenConfig extends FormApplication {
-	constructor(src, tokenConfig, options={}) {
+
+	originalPosition = {x: 0, y:0}
+
+	originalScale = 1.0
+	originalHeight = 1.0
+	originalWidth = 1.0
+
+	constructor(src, token, options={}) {
 		super(src, options);
 		this.object = src;
-		this.tokenConfig = tokenConfig
+		// this.tokenConfig = tokenConfig
 		this._related = null;
 
+		this.originalPosition = {x: this.object.x, y: this.object.y}
+
+		this.originalScale = this.object.data.scale;
+		this.originalWidth = this.object.data.width;
+		this.originalHeight = this.object.data.height;
+
     	//prevent the arrowkeys from moving the token by setting a locking value
-    	this.object.locked = true;
-    	this.object.data.tempPivot = {x: this.object.getFlag('hex-size-support','pivotx'), y:this.object.getFlag('hex-size-support','pivoty')}
+    	this.object.data.tempHexValues = {}
+    	this.object.data.tempHexValues.locked = true;
+    	this.object.data.tempHexValues.tempPivot = {x: this.object.getFlag('hex-size-support','pivotx'), y:this.object.getFlag('hex-size-support','pivoty')}
 
 
     	console.log(this)
@@ -33,13 +47,17 @@ export class HexTokenConfig extends FormApplication {
     	options: this.options,
     	pivotX: this.object.getFlag('hex-size-support','pivotx'),
     	pivotY: this.object.getFlag('hex-size-support','pivoty'),
-    	scale: this.object.data.scale
+    	scale: this.object.data.scale,
+    	borderOffset: this.object.getFlag('hex-size-support','borderRotationOffset') || 0,
+    	borderType: this.object.getFlag('hex-size-support','borderSize'),
+    	altSnapping: this.object.getFlag('hex-size-support','altSnapping'),
+    	vertexSnap: this.object.getFlag('hex-size-support','evenSnap')
     };
   }
 
   /** @override */
   get title(){
-  	return "Hex Token Configureation Wizard"
+  	return "Hex Token Configuration Wizard"
   }
 
 //------------------------------------------------------------
@@ -50,13 +68,100 @@ export class HexTokenConfig extends FormApplication {
   activateListeners(html) {
     super.activateListeners(html);
     this._keyHandler = this._keyHandler || this._onKeyDown.bind(this);
-    html.find("#boop").click(this._boop.bind(this))
+    html.find("#borderType").change(this._changeBorderHandler.bind(this))
+    html.find("#applyTemplateButton").click(this._applyTemplate.bind(this))
     document.addEventListener("keydown", this._keyHandler);
   }
 
-  _boop(event){
-  	console.log(event)
+  _applyTemplate(event){
+  	// console.log(this)
+  	let index = this.form.elements.template.selectedIndex;
+  	if(index > -1){
+  		let options = templateArray[index];
+  		this.object.data.scale = options.scale;
+  		this.object.data.height = options.borderSize;
+  		this.object.data.width = options.borderSize;
+
+  		this.object.data.tempHexValues = {
+  			tempPivot : options.pivot,
+  			borderRotationOffset: options.borderOffset,
+  			altSnapping: options.altSnapping,
+  			vertexSnap: options.vertexSnap,
+  			borderSize: options.borderSize
+  		}
+
+  		this._updateFlagCheckboxes();
+  		this.form.elements.borderOffset.value = this.object.data.tempHexValues.borderRotationOffset;
+
+  		console.log("redraw")
+  		this.object.refresh()
+  		// this.object.shiftPosition(0,0);
+		this.object.setPosition(this.originalPosition.x, this.originalPosition.y)
+	  	//tell the token to redraw the bars for the new size
+	  	this.object.drawBars()
+  	}
   }
+
+  //handles converting the 
+  _changeBorderHandler(event){
+  	return this._changeBorder(parseInt(event.target.value))
+  }
+
+  _updateFlagCheckboxes(){
+  	this.form.elements['altSnapping'].checked = this.object.data.tempHexValues.altSnapping;
+  	this.form.elements['evenSnap'].checked = this.object.data.tempHexValues.vertexSnap;
+  }
+
+  _changeBorder(border){
+
+  	if(border == 0 || border == 1){
+
+  		this.object.data.tempHexValues.borderSize = 1;
+
+  		this.object.data.height = 1;
+  		this.object.data.width = 1;
+
+		// this.object.data.flags['hex-size-support'].altSnapping = false;
+		this.object.data.tempHexValues.altSnapping = false;
+		// this.object.data.flags['hex-size-support'].evenSnap = false;
+		this.object.data.tempHexValues.vertexSnap = false;
+		
+		//reset the hit area because it might have changed with the other choices
+	  	this.object.hitArea = new PIXI.Rectangle(0, 0, this.object.w, this.object.h);
+
+  	}
+  	else{
+  		// this.object.data.flags['hex-size-support'].altSnapping = true;
+  		this.object.data.tempHexValues.altSnapping = true;
+
+  		if(border % 2 == 0){
+			// this.object.data.flags['hex-size-support'].evenSnap = true;
+			this.object.data.tempHexValues.vertexSnap = true;
+  		}
+  		else{
+  			// this.object.data.flags['hex-size-support'].evenSnap = false;
+  			this.object.data.tempHexValues.vertexSnap = false;
+  		}
+
+  		this.object.data.width = border;
+  		this.object.data.height = border;
+
+
+	  	this.object.data.tempHexValues.borderSize = border;
+
+	  	let locked = this.object.data.tempHexValues.locked;
+	  	this.object.data.tempHexValues.locked = undefined;
+	  	this.object.shiftPosition(0,0);
+	  	this.object.data.tempHexValues.locked = locked
+	  	// this.object.refresh();
+  	}
+  	this._updateFlagCheckboxes()
+
+  	this.object.setPosition(this.originalPosition.x, this.originalPosition.y)
+  	//tell the token to redraw the bars for the new size
+  	this.object.drawBars()
+  }
+
 
   _onKeyDown(event) {
     const key = game.keyboard.getKey(event);
@@ -72,6 +177,11 @@ export class HexTokenConfig extends FormApplication {
     if ( event.shiftKey ) {
       
     }
+    //prevent enter key from submitting the form
+    else if( event.keyCode == 13){
+    	event.preventDefault();
+    	return false;
+    }
 
     // Resize grid size on ALT
     else if ( event.altKey ) {
@@ -81,11 +191,18 @@ export class HexTokenConfig extends FormApplication {
 
     // Shift grid position
     else {
-      if ( up.includes(key) ) this._shiftPivot({deltaY: 1});
-      else if ( down.includes(key) ) this._shiftPivot({deltaY: -1});
-      else if ( left.includes(key) ) this._shiftPivot({deltaX: 1});
-      else if ( right.includes(key) ) this._shiftPivot({deltaX: -1});
+		if(this._tabs[0].active === "position"){
+			if ( up.includes(key) ) this._shiftPivot({deltaY: 1});
+			else if ( down.includes(key) ) this._shiftPivot({deltaY: -1});
+			else if ( left.includes(key) ) this._shiftPivot({deltaX: 1});
+			else if ( right.includes(key) ) this._shiftPivot({deltaX: -1});
+		}
+		else if(this._tabs[0].active === "snapping"){
+			if ( left.includes(key) ) this._rotateBorder(-15);
+			else if ( right.includes(key) ) this._rotateBorder(15);
+		}
     }
+
   }
 
   /** @override */
@@ -95,26 +212,44 @@ export class HexTokenConfig extends FormApplication {
     event.preventDefault();
 
     //TODO implement temp flags so they aren't automatically updated even if the form is cancelled
- //    token.setFlag("hex-size-support","pivotx", parseFloat(this.form.elements.pivotx.value));
-	// token.setFlag("hex-size-support","pivoty", parseFloat(this.form.elements.pivoty.value));
-	token.data.tempPivot.x = parseFloat(this.form.elements.pivotx.value);
-	token.data.tempPivot.y = parseFloat(this.form.elements.pivoty.value);
+	token.data.tempHexValues.tempPivot.x = parseFloat(this.form.elements.pivotx.value);
+	token.data.tempHexValues.tempPivot.y = parseFloat(this.form.elements.pivoty.value);
 	token.data.scale = parseFloat(this.form.elements.scale.value);
+	token.data.tempHexValues.borderRotationOffset = parseFloat(this.form.elements.borderOffset.value);
 	token.refresh();
+  }
+
+  //add to the border offset of a token by a given delta
+  _rotateBorder(deltaOffset){
+  	if(this.object.data.tempHexValues.borderRotationOffset == undefined){
+  		this.object.data.tempHexValues.borderRotationOffset = deltaOffset;
+  	}
+  	else{
+  		this.object.data.tempHexValues.borderRotationOffset += deltaOffset;
+  	}
+
+  	//handle values greater/less than 360/-360
+  	if(this.object.data.tempHexValues.borderRotationOffset >= 360){
+  		this.object.data.tempHexValues.borderRotationOffset -= 360
+  	}
+  	else if(this.object.data.tempHexValues.borderRotationOffset < 0){
+  		this.object.data.tempHexValues.borderRotationOffset += 360
+  	}
+
+
+  	this.object.refresh()
+
+  	this.form.elements.borderOffset.value = this.object.data.tempHexValues.borderRotationOffset;
   }
 
 	_shiftPivot(options){
 		let token = this.object;
-		// let newPivotX = (this.object.getFlag('hex-size-support','pivotx') || 0.0) + (options.deltaX || 0);
-		// let newPivotY = (this.object.getFlag('hex-size-support','pivoty') || 0.0) + (options.deltaY || 0);
-		let newPivotX = (token.data.tempPivot.x || 0.0) + (options.deltaX || 0);
-		let newPivotY = (token.data.tempPivot.y || 0.0) + (options.deltaY || 0);
 
+		let newPivotX = (token.data.tempHexValues.tempPivot.x || 0.0) + (options.deltaX || 0);
+		let newPivotY = (token.data.tempHexValues.tempPivot.y || 0.0) + (options.deltaY || 0);
 
-		// token.setFlag("hex-size-support","pivotx", newPivotX);
-		// token.setFlag("hex-size-support","pivoty", newPivotY);
-		token.data.tempPivot.x = newPivotX;
-		token.data.tempPivot.y = newPivotY;
+		token.data.tempHexValues.tempPivot.x = newPivotX;
+		token.data.tempHexValues.tempPivot.y = newPivotY;
 
 		this.form.elements.pivotx.value = newPivotX;
 		this.form.elements.pivoty.value = newPivotY;
@@ -123,7 +258,7 @@ export class HexTokenConfig extends FormApplication {
 	}
 
 	_increaseScale(delta){
-		let token = this.tokenConfig.token;
+		let token = this.object;
 
 		let newScale = (Math.round((token.data.scale + 0.01 * delta) * 100)/100)
 
@@ -135,13 +270,7 @@ export class HexTokenConfig extends FormApplication {
 
 	async _updateObject(event, formData) {
 		let token = this.object;
-		let updateData = {scale: formData.scale.toString()};
-
-		this.tokenConfig.form.elements.scale.value = formData.scale;
-
-		//this pains me deeply, but I honestly spent like an hour trying to find a better
-		//way to convince the form to update the little range box beside the scale range input >~<
-		this.tokenConfig._onChangeRange({target: this.tokenConfig.form.elements.scale})
+		let updateData = {scale: formData.scale.toString(), height: token.data.height.toString(), width: token.data.width.toString()};
 
 		await token.update(updateData);
 
@@ -152,8 +281,10 @@ export class HexTokenConfig extends FormApplication {
 		console.log(formData)
 		token.setFlag("hex-size-support","pivotx", formData.pivotx);
 		token.setFlag("hex-size-support","pivoty", formData.pivoty);
-
-		token.refresh()
+		token.setFlag("hex-size-support","borderRotationOffset", formData.borderOffset);
+		token.setFlag("hex-size-support","borderSize", formData.borderType);
+		token.setFlag("hex-size-support","altSnapping", formData.altSnapping);
+		token.setFlag("hex-size-support","evenSnap", formData.evenSnap);
 	}
 
 
@@ -162,11 +293,68 @@ export class HexTokenConfig extends FormApplication {
     document.removeEventListener("keydown", this._keyHandler);
     document.removeEventListener("wheel", this._wheelHandler);
     this._keyHandler = this._wheelHandler = null;
-    await this.tokenConfig.maximize();
-    this.object.locked = undefined;
-    this.object.data.tempPivot = undefined;
-    this.object.refresh();
+    // this.object.locked = undefined;
+    // this.object.data.tempPivot = undefined;
+    this.object.data.tempHexValues = undefined;
+
+    //handle resetting the object back if the config wasn't submitted
+    if(options == undefined){
+	    this.object.data.scale = this.originalScale;
+	    this.object.data.height = this.originalHeight;
+	    this.object.data.width = this.originalWidth;
+	}
+
+    //trigger relevant redraws on the token
+    this.object.refresh()
+    this.object.drawBars()
     return super.close(options);
   }
 
 }
+
+let templateArray = [
+{
+	scale: 1.6,
+	pivot: {
+		x: 0,
+		y: 72
+	},
+	borderSize: 2,
+	borderOffset: 0,
+	altSnapping: true,
+	vertexSnap: true
+},
+{
+	scale: 1.6,
+	pivot: {
+		x: 0,
+		y: 72
+	},
+	borderSize: 2,
+	borderOffset: 330,
+	altSnapping: true,
+	vertexSnap: true
+},
+{
+	scale: 1.6,
+	pivot: {
+		x: 0,
+		y: 72
+	},
+	borderSize: 3,
+	borderOffset: 0,
+	altSnapping: true,
+	vertexSnap: false
+},
+{
+	scale: 1.37,
+	pivot: {
+		x: 100,
+		y: 0
+	},
+	borderSize: 2,
+	borderOffset: 90,
+	altSnapping: true,
+	vertexSnap: true
+},
+]
