@@ -10,21 +10,32 @@ Alternatively download the zip of the project and unzip it in the modules direct
 
 # How it works
 This module adds a new set of configuration options for a token that change snapping logic
-![Demo](https://i.imgur.com/gJlfKVM.gif)
+![Demo](https://i.imgur.com/pbEbYmi.gif)
 
-The **Alternative Snapping** setting enables the new set of rules. By default this changes the way snapping is calculated to attempt to snap the center of the token to the center of the tile that happens to fall under the center of the token.
-![Alt Snapping Demo](https://i.imgur.com/EiHH1uY.gif)
+The **Border Size** dropdown allows you to select a size for the token. This will update the border of the token and automatically populate flags relevant for a token of the specified size.
+![Border Size Demo](https://i.imgur.com/FGQz41c.gif)
+
+The **Border Offset** setting allows you to rotate the border to accommodate different orientations and also flat-topped grids. You can use the left and right arrow keys to rotate the border in 15° increments while the Border and Snapping tab is open
+![Border Offset Demo](https://i.imgur.com/wn0kgPm.gif)
+
+The **Art Positioning** tab allows you to customize where the art is displayed for the token without modifying the snapping logic. You can use the arrow keys to shift the art around relative to the token's border and scale the art by holding ALT and using the up/down keys.
+![Art Positioning Demo](https://i.imgur.com/U7H3rQr.mp4)
+
+The **Always show border for size larger than 2** setting causes a dull blue border to always be drawn for the token and ensures that it's drawn over the tokens art.
+![Always Draw Border Demo](https://i.imgur.com/YN827Za.gif)
+
+## Advanced Flags
+
+If you use the border size dropdown, you shouldn't need to use these flags as they should be automatically configured for you.
+
+The **Alternative Snapping** setting enables the new set of rules. By default this changes the way snapping is calculated to attempt to snap the center of the token to the center of the tile that happens to fall under the center of the token. This is subtly different than what Foundry does by default and allows hex tokens of size 3,5,etc to snap to their center properly
+![Alt Snapping Demo](https://i.imgur.com/mnpTidZ.mp4)
 
 The **Snap to Vertex(size 2/4)** setting switches the rules to instead snap the center of the token to the intersection of the hexes. You will likely need to use the **Token Display Options** form to tweak size 2/4 token offsets to visually line up.
-![Alt Snapping Demo](https://i.imgur.com/1AXGBbq.gif)
+![Snap to Vertex Demo](https://i.imgur.com/mUemzCf.gif)
 
 Please be aware that this setting does not check which snap points are valid for your token. Half of the snap-points are only valid for one orientation of the token.
-![Alt Snapping Demo](https://i.imgur.com/6sW44Z7.gif)
-
-You will likely have to modify the offset of any size 2 or 4 tokens to get them to snap. This can be done using the **Token Display Options** button to configure this. You can manually enter the values of the offset you need, or you can use the arrow keys to move the token's offset around by 1px
-![Offset Demo](https://i.imgur.com/TZ3W4gA.gif)
-
-You can also use this form to rescale the tokens art by manually entering new values or by holding the ALT key and using the up and down arrows. You can use this to do interesting things
+![Snap to vertex issue Demo](https://i.imgur.com/9YQbbTh.gif)
 
 # Tips
 

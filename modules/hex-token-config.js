@@ -262,7 +262,9 @@ export class HexTokenConfig extends FormApplication {
 	_increaseScale(delta){
 		let token = this.object;
 
-		let newScale = (Math.round((token.data.scale + 0.01 * delta) * 100)/100)
+    let tokenScale = parseFloat(token.data.scale)
+
+		let newScale = (Math.round((tokenScale + 0.01 * delta) * 100)/100)
 
 		token.data.scale = newScale;
 
