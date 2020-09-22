@@ -51,7 +51,8 @@ export class HexTokenConfig extends FormApplication {
     	borderOffset: this.object.getFlag('hex-size-support','borderRotationOffset') || 0,
     	borderType: this.object.getFlag('hex-size-support','borderSize'),
     	altSnapping: this.object.getFlag('hex-size-support','altSnapping'),
-    	vertexSnap: this.object.getFlag('hex-size-support','evenSnap')
+    	vertexSnap: this.object.getFlag('hex-size-support','evenSnap'),
+      templates: templateArray
     };
   }
 
@@ -278,13 +279,13 @@ export class HexTokenConfig extends FormApplication {
 		token.data.scale = parseFloat(token.data.scale);
 
 		console.log(formData)
-		token.setFlag("hex-size-support","pivotx", formData.pivotx);
-		token.setFlag("hex-size-support","pivoty", formData.pivoty);
-		token.setFlag("hex-size-support","borderRotationOffset", formData.borderOffset);
-		token.setFlag("hex-size-support","borderSize", formData.borderType);
-		token.setFlag("hex-size-support","altSnapping", formData.altSnapping);
-		token.setFlag("hex-size-support","evenSnap", formData.evenSnap);
-    
+		await token.setFlag("hex-size-support","pivotx", formData.pivotx);
+		await token.setFlag("hex-size-support","pivoty", formData.pivoty);
+		await token.setFlag("hex-size-support","borderRotationOffset", formData.borderOffset);
+		await token.setFlag("hex-size-support","borderSize", formData.borderType);
+		await token.setFlag("hex-size-support","altSnapping", formData.altSnapping);
+		await token.setFlag("hex-size-support","evenSnap", formData.evenSnap);
+
 		await token.update(updateData);
 	}
 
@@ -315,6 +316,7 @@ export class HexTokenConfig extends FormApplication {
 
 let templateArray = [
 {
+  name: "Retrograde Size 2 Pointy Top",
 	scale: 1.6,
 	pivot: {
 		x: 0,
@@ -326,6 +328,7 @@ let templateArray = [
 	vertexSnap: true
 },
 {
+  name: "Retrograde Size 2 Flat Top",
 	scale: 1.6,
 	pivot: {
 		x: 0,
@@ -337,6 +340,7 @@ let templateArray = [
 	vertexSnap: true
 },
 {
+  name: "Retrograde Size 3 Pointy",
 	scale: 1.6,
 	pivot: {
 		x: 0,
@@ -348,6 +352,7 @@ let templateArray = [
 	vertexSnap: false
 },
 {
+  name: "Retrograde Size 4 Pointy",
 	scale: 1.37,
 	pivot: {
 		x: 100,

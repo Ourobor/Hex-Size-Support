@@ -1,12 +1,12 @@
 <form>
 	<nav class="sheet-tabs tabs">
-		<a class="item" data-tab="image"><i class="fas fa-user"></i>Image and Template</a>
+		<!-- <a class="item" data-tab="image"><i class="fas fa-user"></i>Image and Template</a> -->
 		<a class="item" data-tab="snapping"><i class="fas fa-expand"></i>Border and Snapping</a>
 		<a class="item" data-tab="position"><i class="fas fa-map-marker-alt"></i>Art Positioning</a>
     </nav>
 	<hr/>
 
-	<div class="tab" data-tab="image">
+<!-- 	<div class="tab" data-tab="image">
 		<p class="notes">Configure the token's art and optionally select an existing template</p>
 		<div class="form-group">
             <label>{{localize "TOKEN.ImagePath"}}:</label>
@@ -19,10 +19,11 @@
             <label>Templates:</label>
             <div class="form-fields">
                 <select name="template" style="height:50px" size="3">
-                	<option value="0">Test Point Size 2</option>
-                	<option value="1">Test Flat Size 2</option>
-                	<option value="2">Test Point Size 3</option>
-                	<option value="3">Demo Premade Art</option>
+		            {{#each templates as |template|}}
+		                <option>{{template.name}}</option>
+		            {{/each}}
+		            </select>
+                
                 </select>
             </div>
         </div>
@@ -30,13 +31,14 @@
         	<button id="applyTemplateButton" type="button">Apply Template</button>
         </div>
         
-	</div>
+	</div> -->
 	<div class="tab" data-tab="snapping">
 		<p class="notes">Configure the border and snapping rules for the token</p>
 		<div class="form-group">
 	        <label>Border Type</label>
 	        <div class="form-fields">
 	            <select id="borderType" name="borderType" value="{{ borderType }}" data-dtype="Number">
+	   
 	            	{{#select borderType}}
 	                <option value="0">None</option>
 	                <option value="0">Size 1</option>

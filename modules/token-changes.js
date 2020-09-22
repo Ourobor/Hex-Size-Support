@@ -31,7 +31,7 @@ Token.prototype.refresh = (function () {
 			const gridW = canvas.grid.grid.w;
 			const gridH = canvas.grid.grid.h;
 
-			// if(!!borderColor){
+			if(!!borderColor){
 
 				const size2 = [
 				[0.0, 1.0],
@@ -162,7 +162,7 @@ Token.prototype.refresh = (function () {
 				this.border.clear()
 				this.border.lineStyle(4, 0x000000, 0.8).drawPolygon(shiftedPoints.flat());
 				this.border.lineStyle(2, borderColor || 0xFF9829, 1.0).drawPolygon(shiftedPoints.flat());
-			// }
+			}
 		}
 
 		return p;
