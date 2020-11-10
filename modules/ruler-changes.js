@@ -70,7 +70,7 @@ Ruler.prototype.measure = function(destination, {gridSpaces=true}={}) {
       const origin = waypoints[i];
       const label = this.labels.children[i];
       const ray = new Ray(origin, dest);
-      if ( ray.distance < (0.2 * canvas.grid.size) ) {
+      if ( ray.distance < 10 ) {
         if ( label ) label.visible = false;
         continue;
       }
@@ -89,7 +89,7 @@ Ruler.prototype.measure = function(destination, {gridSpaces=true}={}) {
     }
 
     // Clear the grid highlight layer
-    const hlt = canvas.grid.highlightLayers[this.name];
+    const hlt = canvas.grid.highlightLayers[this.name] || canvas.grid.addHighlightLayer(this.name);
     hlt.clear();
 
     // Draw measured path
