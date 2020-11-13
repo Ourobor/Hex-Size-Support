@@ -274,7 +274,11 @@ export class HexTokenConfig extends FormApplication {
 
 	async _updateObject(event, formData) {
 		let token = this.object;
-		let updateData = {scale: formData.scale.toString(), height: token.data.height.toString(), width: token.data.width.toString()};
+		let updateData = {
+				scale: formData.scale.toString(), 
+				height: token.data.height.toString(), 
+				width: token.data.width.toString()
+		};
 
 
 		//for some reason after updating the scale of a token, it becomes a string? And you also can't use
@@ -291,6 +295,11 @@ export class HexTokenConfig extends FormApplication {
     await token.setFlag("hex-size-support","alwaysShowBorder", formData.alwaysShowBorder);
 
 		await token.update(updateData);
+
+
+		token.data.width = Number(token.data.width);
+		token.data.height = Number(token.data.height);
+		token.data.scale = Number(token.data.scale);
 	}
 
 
