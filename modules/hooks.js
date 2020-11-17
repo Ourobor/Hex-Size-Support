@@ -20,6 +20,30 @@ Hooks.on("renderTokenHUD", async (app, html, token) => {
         
 });
 
+Hooks.once("ready", async function(){
+    document.addEventListener("keydown", function(event){
+        const key = game.keyboard.getKey(event);
+        if(event.shiftKey){
+            if(key == "R" || key == "r"){
+                let tokens = canvas.tokens.placeables.filter(o => o._controlled); 
+                for(let token of canvas.tokens.controlled){
+                    let alternate = token.getFlag("hex-size-support","alternateOrientation") || false;
+                    token.setFlag("hex-size-support","alternateOrientation", !alternate);
+                    // 
+                    // if(borderRotationOffset != null){
+                        // let newRotation = borderRotationOffset + 180;
+                        // //handle values greater than 360
+                        // if(newRotation >= 360){
+                        //     newRotation -= 360
+                        // }
+                    //     token.setFlag("hex-size-support","borderRotationOffset",newRotation);
+                    // }
+                }
+            }
+        }
+    });
+})
+
 /**
 My sincerest affection and love for the Pilot NET Discord community. Without your support, patience and good feels I wouldn't have 
 ever gotten this far. This is all for you now, I'm sorry I made you all wait for so long.

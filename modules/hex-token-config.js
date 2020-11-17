@@ -48,7 +48,7 @@ export class HexTokenConfig extends FormApplication {
     	pivotX: this.object.getFlag('hex-size-support','pivotx'),
     	pivotY: this.object.getFlag('hex-size-support','pivoty'),
     	scale: this.object.data.scale,
-    	borderOffset: this.object.getFlag('hex-size-support','borderRotationOffset') || 0,
+      alternateOrientation: this.object.getFlag('hex-size-support','alternateOrientation'),
     	borderType: this.object.getFlag('hex-size-support','borderSize'),
     	altSnapping: this.object.getFlag('hex-size-support','altSnapping'),
     	vertexSnap: this.object.getFlag('hex-size-support','evenSnap'),
@@ -86,7 +86,7 @@ export class HexTokenConfig extends FormApplication {
 
   		this.object.data.tempHexValues = {
   			tempPivot : options.pivot,
-  			borderRotationOffset: options.borderOffset,
+  			// borderRotationOffset: options.borderOffset,
   			altSnapping: options.altSnapping,
   			vertexSnap: options.vertexSnap,
   			borderSize: options.borderSize
@@ -193,16 +193,16 @@ export class HexTokenConfig extends FormApplication {
 
     // Shift grid position
     else {
-		if(this._tabs[0].active === "position"){
+		// if(this._tabs[0].active === "position"){
 			if ( up.includes(key) ) this._shiftPivot({deltaY: 1});
 			else if ( down.includes(key) ) this._shiftPivot({deltaY: -1});
 			else if ( left.includes(key) ) this._shiftPivot({deltaX: 1});
 			else if ( right.includes(key) ) this._shiftPivot({deltaX: -1});
-		}
-		else if(this._tabs[0].active === "snapping"){
-			if ( left.includes(key) ) this._rotateBorder(-15);
-			else if ( right.includes(key) ) this._rotateBorder(15);
-		}
+		// }
+		// else if(this._tabs[0].active === "snapping"){
+		// 	if ( left.includes(key) ) this._rotateBorder(-15);
+		// 	else if ( right.includes(key) ) this._rotateBorder(15);
+		// }
     }
 
   }
@@ -217,7 +217,8 @@ export class HexTokenConfig extends FormApplication {
 	token.data.tempHexValues.tempPivot.x = parseFloat(this.form.elements.pivotx.value);
 	token.data.tempHexValues.tempPivot.y = parseFloat(this.form.elements.pivoty.value);
 	token.data.scale = parseFloat(this.form.elements.scale.value);
-	token.data.tempHexValues.borderRotationOffset = parseFloat(this.form.elements.borderOffset.value);
+  token.data.tempHexValues.alternateOrientation = this.form.elements.alternateOrientation.checked
+	// token.data.tempHexValues.borderRotationOffset = parseFloat(this.form.elements.borderOffset.value);
 	token.refresh();
   }
 
@@ -288,14 +289,13 @@ export class HexTokenConfig extends FormApplication {
 		console.log(formData)
 		await token.setFlag("hex-size-support","pivotx", formData.pivotx);
 		await token.setFlag("hex-size-support","pivoty", formData.pivoty);
-		await token.setFlag("hex-size-support","borderRotationOffset", formData.borderOffset);
 		await token.setFlag("hex-size-support","borderSize", formData.borderType);
 		await token.setFlag("hex-size-support","altSnapping", formData.altSnapping);
 		await token.setFlag("hex-size-support","evenSnap", formData.evenSnap);
     await token.setFlag("hex-size-support","alwaysShowBorder", formData.alwaysShowBorder);
+    await token.setFlag("hex-size-support","alternateOrientation", formData.alternateOrientation);
 
 		await token.update(updateData);
-
 
 		token.data.width = Number(token.data.width);
 		token.data.height = Number(token.data.height);

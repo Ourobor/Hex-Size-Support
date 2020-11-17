@@ -1,4 +1,4 @@
-import { findNearestVertex } from './helpers.js'
+import { findVertexSnapPoint } from './helpers.js'
 
 //we intercept refresh method(questionably) to set the pivot of the token correctly
 Token.prototype.refresh = (function () {
@@ -145,11 +145,28 @@ Token.prototype.refresh = (function () {
 					}
 				}
 
+				//is this grid using columns?
+				let columns = canvas.grid.grid.columns;
+				let alt = this.getFlag('hex-size-support', 'alternateOrientation') || false;
+				if(this.data.tempHexValues != undefined){
+					if(this.data.tempHexValues.alternateOrientation != undefined){
+						alt = this.data.tempHexValues.alternateOrientation
+					}
+				}
+
+				borderRotationOffset = 0;
+				if(columns){
+					borderRotationOffset -= 30;
+				}
+				if(alt){
+					borderRotationOffset += 180;
+				}
+
 			    //rotate the coordinates
 			    //this is required because the rotation attribute of the border only rotates the graphics, not the hit area
 			    //and the hit area is only defined by a collection of points
-			    const cosTheta = Math.cos((this.data.rotation + borderRotationOffset) * 0.0174533);
-			    const sinTheta = Math.sin((this.data.rotation + borderRotationOffset) * 0.0174533);
+			    const cosTheta = Math.cos((/*this.data.rotation +*/ borderRotationOffset) * 0.0174533);
+			    const sinTheta = Math.sin((/*this.data.rotation +*/ borderRotationOffset) * 0.0174533);
 
 			    let rotatedPoints = xyPoints.map( (point) => {
 			    	let x = cosTheta * point[0] + (-1 * sinTheta * point[1])
@@ -282,18 +299,28 @@ Token.prototype.evenSnap = function(dest){
     //get coordinates of the center snap point
     [snappedCenter.x, snappedCenter.y] = canvas.grid.getCenter(tokenCenter.x, tokenCenter.y);
 
-    let vertexOffset = findNearestVertex(snappedCenter, tokenCenter);
-
+    let up = this.getFlag("hex-size-support","alternateOrientation");
+    if(this.data.tempHexValues != undefined){
+		if(this.data.tempHexValues.alternateOrientation != undefined){
+			up = this.data.tempHexValues.alternateOrientation
+		}
+	}
+    
+    let vertexSnap = findVertexSnapPoint(dest.x + offset.x, dest.y + offset.y, this, canvas.grid.grid)
     //set the pivot here in addition to when the canvas is rendered
     //this is to ensure the pivot change happens after a token is changed and moved
     // this.icon.pivot.y = -(canvas.grid.grid.h * 0.125 * 2);
     this.icon.pivot.y = this.getFlag("hex-size-support","pivoty") || 0.0;
 	this.icon.pivot.x = this.getFlag("hex-size-support","pivotx") || 0.0;
-    //remove the offset from the newly discovered true center and store
-    return {
-    	x: snappedCenter.x - offset.x + vertexOffset.x,
-    	y: snappedCenter.y - offset.y + vertexOffset.y //+ (canvas.grid.grid.h * 0.125)
+
+	let snapPoint = {
+    	x: vertexSnap.x - offset.x,
+    	y: vertexSnap.y - offset.y
     }
+    console.log("Snapped X: " + snapPoint.x +  " Snapped Y: " + snapPoint.y)
+
+    //remove the offset from the newly discovered true center and store
+    return snapPoint
 }
 
 //Handle dealing with shifting a token, this fixes issues with using arrow keys
@@ -317,7 +344,9 @@ Token.prototype._getShiftedPosition = function(dx, dy){
 	else{
 		console.log(dx, dy)
 		let columns = canvas.grid.grid.columns;
-		let [row, col] = canvas.grid.grid.getGridPositionFromPixels(this.x, this.y);
+		let [row, col] = canvas.grid.grid.getGridPositionFromPixels(this.data.x, this.data.y);
+		console.log(row + "," + col)
+		console.log(this.data.x + "," + this.data.y)
 
 		let x = this.x;
 		let y = this.y;
@@ -328,59 +357,43 @@ Token.prototype._getShiftedPosition = function(dx, dy){
 		}
 
 		if(columns != true){
-
-			if(evenSnapping){
-				dy += Math.sign(dy) * -0.4;
-				dx += Math.sign(dx) * -0.5;
-			}
-			else{
-				//handle the zigzag for columns
-				//we only need to offset the tile if we're changing y and the number of tiles is odd
-				if(dy != 0 && dy % 2 != 0){
-					//reduce the magnitude of dy by 0.5 to offset the change in dx
-					if(dy > 0){
-						dy -= 0.5
-					}
-					else if(dy > 0){
-						dy += 0.5
-					}
-					//if we're in an even column, zig to the left
-					if(col % 2 == 0){
-						dx -= 0.5;
-					}
-					//otherwise zag to the right
-					else if(col % 2 != 0){
-						dx += 0.5;
-					}
+			if(dy != 0 && dy % 2 != 0){
+				//reduce the magnitude of dy by 0.5 to offset the change in dx
+				if(dy > 0){
+					dy -= 0.5
+				}
+				else if(dy > 0){
+					dy += 0.5
+				}
+				//if we're in an even column, zig to the left
+				if(col % 2 == 0){
+					dx -= 0.5;
+				}
+				//otherwise zag to the right
+				else if(col % 2 != 0){
+					dx += 0.5;
 				}
 			}
 		}
 		else{
-			if(evenSnapping){
-				dy += Math.sign(dy) * -0.5;
-				dx += Math.sign(dx) * -0.4;
-			}
-			else{
-				//handle the zigzag for columns
-				//we only need to offset the tile if we're changing y and the number of tiles is odd
-				if(dx != 0 && dx % 2 != 0){
+			//handle the zigzag for columns
+			//we only need to offset the tile if we're changing y and the number of tiles is odd
+			if(dx != 0 && dx % 2 != 0){
+				//reduce the magnitude of dy by 0.5 to offset the change in dx
+				if(dx > 0){
+					dx -= 0.5
+				}
+				else if(dx > 0){
+					dx += 0.5
+				}
 
-					//reduce the magnitude of dy by 0.5 to offset the change in dx
-					if(dx > 0){
-						dx -= 0.5
-					}
-					else if(dx > 0){
-						dx += 0.5
-					}
-
-					//if we're in an even column, zig to the left
-					if(row % 2 == 0){
-						dy -= 0.5;
-					}
-					//otherwise zag to the right
-					else if(row % 2 != 0){
-						dy += 0.5;
-					}
+				//if we're in an even column, zig to the left
+				if(row % 2 == 0){
+					dy -= 0.5;
+				}
+				//otherwise zag to the right
+				else if(row % 2 != 0){
+					dy += 0.5;
 				}
 			}
 		}

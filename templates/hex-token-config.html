@@ -1,12 +1,5 @@
 <form>
-	<nav class="sheet-tabs tabs">
-		<!-- <a class="item" data-tab="image"><i class="fas fa-user"></i>Image and Template</a> -->
-		<a class="item" data-tab="snapping"><i class="fas fa-expand"></i>Border and Snapping</a>
-		<a class="item" data-tab="position"><i class="fas fa-map-marker-alt"></i>Art Positioning</a>
-    </nav>
-	<hr/>
-
-<!-- 	<div class="tab" data-tab="image">
+<!-- 	
 		<p class="notes">Configure the token's art and optionally select an existing template</p>
 		<div class="form-group">
             <label>{{localize "TOKEN.ImagePath"}}:</label>
@@ -29,68 +22,61 @@
         </div>
         <div class="form-group">
         	<button id="applyTemplateButton" type="button">Apply Template</button>
-        </div>
-        
-	</div> -->
-	<div class="tab" data-tab="snapping">
-		<p class="notes">Configure the border and snapping rules for the token</p>
-		<div class="form-group">
-	        <label>Border Type</label>
-	        <div class="form-fields">
-	            <select id="borderType" name="borderType" value="{{ borderType }}" data-dtype="Number">
-	   
-	            	{{#select borderType}}
-	                <option value="0">None</option>
-	                <option value="0">Size 1</option>
-	                <option value="2">Size 2</option>
-	                <option value="3">Size 3</option>
-	                <option value="4">Size 4</option>
-	                {{/select}}
-	            </select>
-	        </div>
-    	</div>
+        </div> 
+    	<hr/>-->
 
-    	<div class="form-group">
-			<label>Border Offset</label>
-			<input type="text" name="borderOffset" value="{{ borderOffset }}" data-dtype="Number"/>
-			<!-- <p class="notes"></p> -->
-		</div>
-
-		<hr/>
-
-		<div class="form-group">
-			<label class="checkbox">Use Alternative Snapping</label>
-			<input type="checkbox" name="altSnapping" {{checked altSnapping}}>
-		</div>
-		<div class="form-group">
-			<label class="checkbox">Snap to Vertex(size 2/4)</label>
-			<input type="checkbox" name="evenSnap" {{checked vertexSnap}}>
-		</div>
-		<div class="form-group">
-			<!-- Turns out, it's a massive rework to get size 1 tokens to work with always showing borders...-->
-			<label class="checkbox">Always show border for size larger 2</label>
-			<input type="checkbox" name="alwaysShowBorder" {{checked alwaysShowBorder}}>
+	<p class="notes">Configure the border and snapping rules for the token</p>
+	<div class="form-group">
+		<label>Border Type</label>
+		<div class="form-fields">
+			<select id="borderType" name="borderType" value="{{ borderType }}" data-dtype="Number">
+				{{#select borderType}}
+				<option value="0">None</option>
+				<option value="0">Size 1</option>
+				<option value="2">Size 2</option>
+				<option value="3">Size 3</option>
+				<option value="4">Size 4</option>
+				{{/select}}
+			</select>
 		</div>
 	</div>
-
-	<div class="tab" data-tab="position">
-		<p class="notes">Configure the positioning of the art to match the border. Use arrow keys to shift the token's art by one pixel in that direct. Alt+Up/Alt+Down to scale the art up/down</p>
-		<div class="form-group">
-			<label class="checkbox">Token Pivot X</label>
-			<input type="text" name="pivotx" value="{{ pivotX }}" data-dtype="Number"/>
-		</div>
-		<div class="form-group">
-			<label class="checkbox">Token Pivot Y</label>
-			<input type="text" name="pivoty" value="{{ pivotY }}" data-dtype="Number"/>
-		</div>
-
-		<div class="form-group">
-			<label class="checkbox">Token Scale</label>
-			<input type="text" name="scale" value="{{ scale }}" data-dtype="Number"/>
-		</div>
-		<button type="submit" id="configAdvHex" title="Save Changes">
-			<i class="fas fa-draw-polygon fa-fw"></i> Save Changes
-		</button>
+	<div class="form-group">
+		<label>Alternate Orientation(Size 2)</label>
+		<input type="checkbox" name="alternateOrientation" {{checked alternateOrientation}}>
+		<p class="notes">Flip the orientation of the token</p>
 	</div>
 
+	<hr/>
+
+	<p class="notes">Configure the positioning of the art to match the border. Use arrow keys to shift the token's art by one pixel in that direct. Alt+Up/Alt+Down to scale the art up/down</p>
+	<div class="form-group">
+		<label class="checkbox">Token Offset X</label>
+		<input type="text" name="pivotx" value="{{ pivotX }}" data-dtype="Number"/>
+	</div>
+	<div class="form-group">
+		<label class="checkbox">Token Offset Y</label>
+		<input type="text" name="pivoty" value="{{ pivotY }}" data-dtype="Number"/>
+	</div>
+	<div class="form-group">
+		<label class="checkbox">Token Scale</label>
+		<input type="text" name="scale" value="{{ scale }}" data-dtype="Number"/>
+	</div>
+	<hr/>
+	<div class="form-group">
+		<label class="checkbox">Use Alternative Snapping</label>
+		<input type="checkbox" name="altSnapping" {{checked altSnapping}}>
+	</div>
+	<div class="form-group">
+		<label class="checkbox">Snap to Vertex(size 2/4)</label>
+		<input type="checkbox" name="evenSnap" {{checked vertexSnap}}>
+	</div>
+	<div class="form-group">
+		<!-- Turns out, it's a massive rework to get size 1 tokens to work with always showing borders...-->
+		<label class="checkbox">Always show border for size larger 2</label>
+		<input type="checkbox" name="alwaysShowBorder" {{checked alwaysShowBorder}}>
+	</div>
+
+	<button type="submit" id="configAdvHex" title="Save Changes">
+	<i class="fas fa-draw-polygon fa-fw"></i> Save Changes
+	</button>
 </form>

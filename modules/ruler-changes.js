@@ -1,4 +1,4 @@
-import { findNearestVertex, findMovementToken } from './helpers.js'
+import { findMovementToken, findVertexSnapPoint } from './helpers.js'
 
 //TODO rewrite this to only run my new stuff if needed
 Ruler.prototype._addWaypoint = function(point) {
@@ -22,12 +22,14 @@ Ruler.prototype._addWaypoint = function(point) {
 
     //if the even snapping flag is set, we need to offset the position of the first waypoint to a vertex
     if(evenSnapping){
-      //get the offset to the vertex
-    	let offset = findNearestVertex({x: center[0], y: center[1]}, point);
+
+      //get the new center location for the ruler
+      let newPoints = findVertexSnapPoint(point.x, point.y, token, canvas.grid.grid)
 
     	//update the center
-    	center[0] = center[0] + offset.x;
-    	center[1] = center[1] + offset.y;
+    	center[0] = newPoints.x;
+    	center[1] = newPoints.y;
+      
     }
   }
   this.waypoints.push(new PIXI.Point(center[0], center[1]));
@@ -49,10 +51,10 @@ Ruler.prototype.measure = function(destination, {gridSpaces=true}={}) {
     }
     //determine if this is measuring from an even token; even tokens need to have their snapping points offset
     if(evenSnapping){
-	    //get the offset to the vertex
-    	let offset = findNearestVertex({x: center[0], y: center[1]}, destination);
 
-    	destination = new PIXI.Point(center[0] + offset.x, center[1] + offset.y);
+      let newPoints = findVertexSnapPoint(destination.x, destination.y, token, canvas.grid.grid)
+
+      destination = new PIXI.Point(newPoints.x, newPoints.y);
     }
     else{
     	destination = new PIXI.Point(...canvas.grid.getCenter(destination.x, destination.y));
