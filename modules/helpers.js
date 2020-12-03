@@ -1,6 +1,13 @@
 
 /**
  * Find the closest vertex snapping point to a given point, based on the provided token and grid state
+ *
+ *  @param (number) x the x coordinate of the point to find the closest snapping point to
+ *  @param (number) y the y coordinate of the point to find the closest snapping point to
+ *  @param (Token) token the token which will be snapped. Used to determine orientation and select which snapping points are valid
+ *  @param (HexGrid) grid the canvas grid the snapping will occur on
+ *  
+ *  @return {number, number}
  */
 export function findVertexSnapPoint(x,y,token, grid){
     let alt = token.getFlag("hex-size-support","alternateOrientation");

@@ -317,7 +317,7 @@ Token.prototype.evenSnap = function(dest){
     	x: vertexSnap.x - offset.x,
     	y: vertexSnap.y - offset.y
     }
-    console.log("Snapped X: " + snapPoint.x +  " Snapped Y: " + snapPoint.y)
+    // console.log("Snapped X: " + snapPoint.x +  " Snapped Y: " + snapPoint.y)
 
     //remove the offset from the newly discovered true center and store
     return snapPoint
@@ -342,11 +342,11 @@ Token.prototype._getShiftedPosition = function(dx, dy){
 		return this._getShiftedPositionCached(dx,dy);
 	}
 	else{
-		console.log(dx, dy)
+		// console.log(dx, dy)
 		let columns = canvas.grid.grid.columns;
 		let [row, col] = canvas.grid.grid.getGridPositionFromPixels(this.data.x, this.data.y);
-		console.log(row + "," + col)
-		console.log(this.data.x + "," + this.data.y)
+		// console.log(row + "," + col)
+		// console.log(this.data.x + "," + this.data.y)
 
 		let x = this.x;
 		let y = this.y;

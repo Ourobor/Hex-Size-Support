@@ -3,7 +3,7 @@
   "title": "Hex Token Size Support",
   "description": "Improves support for hexagonal tokens of sizes greater than one by altering the grid snapping rules",
   "author": "Ourobor",
-  "version": "0.5.0",
+  "version": "0.5.1",
   "minimumCoreVersion": "0.6.0",
   "compatibleCoreVersion": "0.7.7",
   "esmodules": [

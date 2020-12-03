@@ -24,8 +24,7 @@ export class HexTokenConfig extends FormApplication {
     	this.object.data.tempHexValues.locked = true;
     	this.object.data.tempHexValues.tempPivot = {x: this.object.getFlag('hex-size-support','pivotx'), y:this.object.getFlag('hex-size-support','pivoty')}
 
-
-    	console.log(this)
+    	// console.log(this)
 	}
 
 	static get defaultOptions() {
@@ -95,7 +94,7 @@ export class HexTokenConfig extends FormApplication {
   		this._updateFlagCheckboxes();
   		this.form.elements.borderOffset.value = this.object.data.tempHexValues.borderRotationOffset;
 
-  		console.log("redraw")
+  		// console.log("redraw")
   		this.object.refresh()
   		// this.object.shiftPosition(0,0);
 		this.object.setPosition(this.originalPosition.x, this.originalPosition.y)
@@ -286,7 +285,7 @@ export class HexTokenConfig extends FormApplication {
 		//a float as a value to update to for some reason as well, so we just transform it back to a float here
 		token.data.scale = parseFloat(token.data.scale);
 
-		console.log(formData)
+		// console.log(formData)
 		await token.setFlag("hex-size-support","pivotx", formData.pivotx);
 		await token.setFlag("hex-size-support","pivoty", formData.pivoty);
 		await token.setFlag("hex-size-support","borderSize", formData.borderType);
