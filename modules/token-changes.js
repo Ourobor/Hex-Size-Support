@@ -212,32 +212,36 @@ Token.prototype._onDragLeftDrop = function(event) {
 	if(altSnapping == true){
 		const clones = event.data.clones || [];
 	    const {originalEvent, destination} = event.data;
+		const preview = game.settings.get("core", "tokenDragPreview");
 
 	    // Ensure the destination is within bounds
 	    if ( !canvas.grid.hitArea.contains(destination.x, destination.y) ) return false;
 
 	    // Compute the final dropped positions
 	    const updates = clones.reduce((updates, c) => {
+	    	// Reset vision back to the initial location
+			if ( preview )  c._original.updateSource({noUpdateFog: true});
 
-	      // Get the snapped top-left coordinate
-	      let dest = {x: c.data.x, y: c.data.y};
+	    	// Get the snapped top-left coordinate
+	    	let dest = {x: c.data.x, y: c.data.y};
 
-	      if (!originalEvent.shiftKey) {
-	      	let evenSnapping = this.getFlag("hex-size-support", "evenSnap");
-	      	if(this.data?.tempHexValues?.vertexSnap != undefined){
-				evenSnapping = this.data.tempHexValues.vertexSnap
-			}
+	    	if (!originalEvent.shiftKey) {
+		      	let evenSnapping = this.getFlag("hex-size-support", "evenSnap");
+		      	if(this.data?.tempHexValues?.vertexSnap != undefined){
+					evenSnapping = this.data.tempHexValues.vertexSnap
+				}
 
-	      	if(evenSnapping == false){
-	      		dest = this.oddSnap(dest);
+		      	if(evenSnapping == false){
+		      		dest = this.oddSnap(dest);
+		      	}
+		      	else{
+		      		dest = this.evenSnap(dest);
+		      	}
 	      	}
-	      	else{
-	      		dest = this.evenSnap(dest);
-	      	}
-	      }
 
 	      // Test collision for each moved token vs the central point of it's destination space
 	      if ( !game.user.isGM ) {
+	      	c._velocity = c._original._velocity;
 	        let target = c.getCenter(dest.x, dest.y);
 	        let collides = c.checkCollision(target);
 	        if ( collides ) {

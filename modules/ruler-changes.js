@@ -138,11 +138,15 @@ Ruler.prototype.moveToken = async function() {
     //if using alt snapping, just put the center of the token to the waypoint 
     if(token != undefined && altSnapping){
   		let wasPaused = game.paused;
-  		if ( wasPaused && !game.user.isGM ) return false;
+  		if ( wasPaused && !game.user.isGM ) {
+        ui.notifications.warn(game.i18n.localize("GAME.PausedWarning"));
+        return false;
+      }
   		if ( !this.visible || !this.destination ) return false;
   		const token = this._getMovementToken();
   		if ( !token ) return;
-
+      // Get the movement rays and check collision along each Ray
+      // These rays are center-to-center for the purposes of collision checking
     	const rays = this._getRaysFromWaypoints(this.waypoints, this.destination);
 
 	    let hasCollision = rays.some(r => canvas.walls.checkCollision(r));
