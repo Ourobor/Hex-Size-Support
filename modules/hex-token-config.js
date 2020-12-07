@@ -115,7 +115,7 @@ export class HexTokenConfig extends FormApplication {
 
   _changeBorder(border){
 
-  	if(border == 0 || border == 1){
+  	if(border == 0){
 
   		this.object.data.tempHexValues.borderSize = 1;
 

@@ -1,4 +1,5 @@
-import { findVertexSnapPoint } from './helpers.js'
+import { findVertexSnapPoint, getAltSnappingFlag, getEvenSnappingFlag, getAltOrientationFlag, getCenterOffset } from './helpers.js'
+import { borderData } from './token-border-config.js'
 
 //we intercept refresh method(questionably) to set the pivot of the token correctly
 Token.prototype.refresh = (function () {
@@ -26,7 +27,7 @@ Token.prototype.refresh = (function () {
 		let alwaysShowBorder = this.getFlag("hex-size-support", "alwaysShowBorder")
 
 		//handle rerendering the borders for custom border offsets and resizing
-		if(alwaysShowBorder == true || (borderSize != undefined && borderSize != 1)){
+		if(alwaysShowBorder == true || (borderSize != undefined /*&& borderSize != 1*/)){
 			let borderColor = this._getBorderColor();
 
 			const gridW = canvas.grid.grid.w;
@@ -39,97 +40,16 @@ Token.prototype.refresh = (function () {
 			}
 
 			if(!!borderColor){
-				const size2 = [
-				[0.0, 1.0],
-				[-0.5, 0.75],
-				[-0.5, 0.25],
-				[-1.0, 0.0],
-				[-1.0, -0.5],
-				[-0.5, -0.75],
-				[0.0, -0.5],
-				[0.5, -0.75],
-				[1.0, -0.5],
-				[1.0, 0.0],
-				[0.5, 0.25],
-				[0.5, 0.75],
-				[0.0, 1.0]]
+				let border = borderData.find(function(border){
+					return border.key == borderSize;
+				});
 
-				const size3 = [
-				[-1.5, -0.25],
-				[-1.0, -0.5 ],
-				[-1.0, -1.0 ],
-				[-0.5, -1.25],
-				[ 0.0, -1.0 ],
-				[ 0.5, -1.25],
-				[ 1.0, -1.0 ],
-				[ 1.0, -0.5 ],
-				[ 1.5, -0.25],
-				[ 1.5,  0.25],
-				[ 1.0,  0.5 ],
-				[ 1.0,  1.0 ],
-				[ 0.5,  1.25],
-				[ 0.0,  1.0 ],
-				[-0.5,  1.25],
-				[-1.0,  1.0 ],
-				[-1.0,  0.5 ],
-				[-1.5,  0.25],
-				[-1.5, -0.25]
-				]
-
-				const size4 = [
-				[-2.0,  0.0 ],
-				[-2.0, -0.5 ],
-				[-1.5, -0.75],
-				[-1.5, -1.25],
-				[-1.0, -1.5 ],
-				[-0.5, -1.25],
-				[ 0.0, -1.5 ],
-				[ 0.5, -1.25],
-				[ 1.0, -1.5 ],
-				[ 1.5, -1.25],
-				[ 1.5, -0.75],
-				[ 2.0, -0.5 ],
-				[ 2.0,  0.0 ],//halfway
-				[ 1.5,  0.25],
-				[ 1.5,  0.75],
-				[ 1.0,  1.0 ],
-				[ 1.0,  1.5 ],
-				[ 0.5,  1.75],
-				[ 0.0,  1.5 ],
-				[-0.5,  1.75],
-				[-1.0,  1.5 ],
-				[-1.0,  1.0 ],
-				[-1.5,  0.75],
-				[-1.5,  0.25],
-				[-2.0,  0.0 ]
-				]
-
-				let height = 1.0;
-				let width = 1.0;
-
-				let points;
-
-				if(borderSize == 2){
-					height = 2.0 * gridH
- 					width = 2.0 * gridW
-					points = size2;
-				}
-				else if(borderSize == 3){
-					height = 3 * gridH
- 					width = 3 * gridW
-					points = size3;
-				}
-				else if(borderSize == 4){
-					height = 4 * gridH
- 					width = 4 * gridW
-					points = size4;
-				}
-				else{
+				if(border === undefined){
 					return p
 				}
 
 				//remap the coordinates to the grid's width/height
-				let xyPoints = points.map((p) => {
+				let xyPoints = border.border.map((p) => {
 					if(canvas.grid.grid.columns != true){
 			    		return [(gridW * p[0]), (gridH * p[1])];
 			    	}
@@ -138,23 +58,11 @@ Token.prototype.refresh = (function () {
 			    	}
 			    });
 
-				let borderRotationOffset = this.getFlag('hex-size-support', 'borderRotationOffset') || 0.0;
-				if(this.data.tempHexValues != undefined){
-					if(this.data.tempHexValues.borderRotationOffset != undefined){
-						borderRotationOffset = this.data.tempHexValues.borderRotationOffset
-					}
-				}
-
 				//is this grid using columns?
 				let columns = canvas.grid.grid.columns;
-				let alt = this.getFlag('hex-size-support', 'alternateOrientation') || false;
-				if(this.data.tempHexValues != undefined){
-					if(this.data.tempHexValues.alternateOrientation != undefined){
-						alt = this.data.tempHexValues.alternateOrientation
-					}
-				}
+				let alt = getAltOrientationFlag(this);
 
-				borderRotationOffset = 0;
+				let borderRotationOffset = 0;
 				if(columns){
 					borderRotationOffset -= 30;
 				}
@@ -165,8 +73,8 @@ Token.prototype.refresh = (function () {
 			    //rotate the coordinates
 			    //this is required because the rotation attribute of the border only rotates the graphics, not the hit area
 			    //and the hit area is only defined by a collection of points
-			    const cosTheta = Math.cos((/*this.data.rotation +*/ borderRotationOffset) * 0.0174533);
-			    const sinTheta = Math.sin((/*this.data.rotation +*/ borderRotationOffset) * 0.0174533);
+			    const cosTheta = Math.cos((borderRotationOffset) * 0.0174533);
+			    const sinTheta = Math.sin((borderRotationOffset) * 0.0174533);
 
 			    let rotatedPoints = xyPoints.map( (point) => {
 			    	let x = cosTheta * point[0] + (-1 * sinTheta * point[1])
@@ -175,8 +83,8 @@ Token.prototype.refresh = (function () {
 			    })
 			    
 			    let shiftedPoints = rotatedPoints.map((point) => {
-			    	const x = point[0] + width / 2
-			    	const y = point[1] + height / 2
+			    	const x = point[0] + border.width * gridW / 2
+			    	const y = point[1] +  border.height * gridH / 2
 			    	return [x,y]
 			    	})
 
@@ -204,10 +112,7 @@ Token.prototype.refresh = (function () {
 Token.prototype._cachedonDragLeftDrop = Token.prototype._onDragLeftDrop;
 Token.prototype._onDragLeftDrop = function(event) {
 
-	let altSnapping = this.getFlag("hex-size-support", "altSnapping");
-	if(this.data?.tempHexValues?.altSnapping != undefined){
-		altSnapping = this.data.tempHexValues.altSnapping
-	}
+	let altSnapping = getAltSnappingFlag(this)
 
 	if(altSnapping == true){
 		const clones = event.data.clones || [];
@@ -225,18 +130,24 @@ Token.prototype._onDragLeftDrop = function(event) {
 	    	// Get the snapped top-left coordinate
 	    	let dest = {x: c.data.x, y: c.data.y};
 
+	    	//only enabling snapping when shift isn't held
 	    	if (!originalEvent.shiftKey) {
-		      	let evenSnapping = this.getFlag("hex-size-support", "evenSnap");
-		      	if(this.data?.tempHexValues?.vertexSnap != undefined){
-					evenSnapping = this.data.tempHexValues.vertexSnap
-				}
+		      	let evenSnapping = getEvenSnappingFlag(this);
 
+		      	let offset = getCenterOffset(this)
+		      	let snapPoint = {}
 		      	if(evenSnapping == false){
-		      		dest = this.oddSnap(dest);
+				    //get coordinates of the center of the hex that this coordinate falls under
+				    [snapPoint.x, snapPoint.y] = canvas.grid.getCenter(dest.x + offset.x, dest.y + offset.y);
 		      	}
-		      	else{
-		      		dest = this.evenSnap(dest);
+		      	else{  
+		      		//get the coordinates of the closest vertex snap point valid for this token
+					snapPoint = findVertexSnapPoint(dest.x + offset.x, dest.y + offset.y, this, canvas.grid.grid)
 		      	}
+		      	dest = {
+				    x: snapPoint.x - offset.x,
+				    y: snapPoint.y - offset.y
+				}
 	      	}
 
 	      // Test collision for each moved token vs the central point of it's destination space
@@ -261,72 +172,6 @@ Token.prototype._onDragLeftDrop = function(event) {
 	}
 }
 
-//given a coordinate, returns the closest valid snap point for odd type snapping
-Token.prototype.oddSnap = function(dest){
-    //offset values for the center of the tile
-    //ex, top left + offset.x is the x coordinate of the center of the token
-    let offset = {
-    	x: (this.w) / 2,
-		y: (this.h) / 2
-    }
-
-    //get coordinates of the center snap point
-    let center = canvas.grid.getCenter(dest.x + offset.x, dest.y + offset.y);
-
-    //set the pivot to zero to ensure that pivot is changed correctly if a token is changed from
-    //even snapping to odd snapping
-    this.icon.pivot.y = this.getFlag("hex-size-support","pivoty") || 0.0;
-	this.icon.pivot.x = this.getFlag("hex-size-support","pivotx") || 0.0;
-	// this.icon.pivot.y = 0;
-
-    //remove the offset from the newly discovered true center and store
-    return {
-    	x: center[0] - offset.x,
-    	y: center[1] - offset.y
-    }
-}
-
-//given a coordinate, returns the closest valid snap point for even type snapping
-Token.prototype.evenSnap = function(dest){
-    //offset values for the center of the tile
-    //ex, top left + offset.x is the x coordinate of the center of the token
-    let offset = {
-    	x: (this.w) / 2,
-		y: (this.h) / 2
-    }
-
-    let tokenCenter = {
-    	x: dest.x + offset.x,
-    	y: dest.y + offset.y
-    }
-	let snappedCenter = {x: 0, y: 0};
-    //get coordinates of the center snap point
-    [snappedCenter.x, snappedCenter.y] = canvas.grid.getCenter(tokenCenter.x, tokenCenter.y);
-
-    let up = this.getFlag("hex-size-support","alternateOrientation");
-    if(this.data.tempHexValues != undefined){
-		if(this.data.tempHexValues.alternateOrientation != undefined){
-			up = this.data.tempHexValues.alternateOrientation
-		}
-	}
-    
-    let vertexSnap = findVertexSnapPoint(dest.x + offset.x, dest.y + offset.y, this, canvas.grid.grid)
-    //set the pivot here in addition to when the canvas is rendered
-    //this is to ensure the pivot change happens after a token is changed and moved
-    // this.icon.pivot.y = -(canvas.grid.grid.h * 0.125 * 2);
-    this.icon.pivot.y = this.getFlag("hex-size-support","pivoty") || 0.0;
-	this.icon.pivot.x = this.getFlag("hex-size-support","pivotx") || 0.0;
-
-	let snapPoint = {
-    	x: vertexSnap.x - offset.x,
-    	y: vertexSnap.y - offset.y
-    }
-    // console.log("Snapped X: " + snapPoint.x +  " Snapped Y: " + snapPoint.y)
-
-    //remove the offset from the newly discovered true center and store
-    return snapPoint
-}
-
 //Handle dealing with shifting a token, this fixes issues with using arrow keys
 Token.prototype._getShiftedPositionCached = Token.prototype._getShiftedPosition;
 Token.prototype._getShiftedPosition = function(dx, dy){
@@ -334,31 +179,21 @@ Token.prototype._getShiftedPosition = function(dx, dy){
 	if(this.data.tempHexValues?.locked == true){
 		return {x: this.x, y:this.y}
 	}
-	// const altSnapping = this.data?.tempHexValues?.borderSize || this.getFlag("hex-size-support", "altSnapping")
 
-	let altSnapping = this.getFlag("hex-size-support", "altSnapping");
-	if(this.data?.tempHexValues?.altSnapping != undefined){
-		altSnapping = this.data.tempHexValues.altSnapping
-	}
+	let altSnapping = getAltSnappingFlag(this)
 
 	//run original code if no flag for alt-snapping
 	if(!altSnapping == true){
 		return this._getShiftedPositionCached(dx,dy);
 	}
 	else{
-		// console.log(dx, dy)
 		let columns = canvas.grid.grid.columns;
 		let [row, col] = canvas.grid.grid.getGridPositionFromPixels(this.data.x, this.data.y);
-		// console.log(row + "," + col)
-		// console.log(this.data.x + "," + this.data.y)
 
 		let x = this.x;
 		let y = this.y;
 		
-		let evenSnapping = this.getFlag("hex-size-support", "evenSnap");
-      	if(this.data?.tempHexValues?.vertexSnap != undefined){
-			evenSnapping = this.data.tempHexValues.vertexSnap
-		}
+		let evenSnapping = getEvenSnappingFlag(this)
 
 		if(columns != true){
 			if(dy != 0 && dy % 2 != 0){
@@ -410,17 +245,21 @@ Token.prototype._getShiftedPosition = function(dx, dy){
 	    let targetCenter = this.getCenter(dest.x, dest.y);
 	    let collide = this.checkCollision(targetCenter);
 
-	   
-	 //    let evenSnapping = this.getFlag("hex-size-support", "evenSnap");
-  //     	if(this.data?.tempHexValues?.vertexSnap != undefined){
-		// 	evenSnapping = this.data.tempHexValues.vertexSnap
-		// }
+		let offset = getCenterOffset(this)
+      	let snapPoint = {}
       	if(evenSnapping == false){
-      		dest = this.oddSnap(dest);
+		    //get coordinates of the center of the hex that this coordinate falls under
+		    [snapPoint.x, snapPoint.y] = canvas.grid.getCenter(dest.x + offset.x, dest.y + offset.y);
       	}
-      	else{
-      		dest = this.evenSnap(dest);
+      	else{  
+      		//get the coordinates of the closest vertex snap point valid for this token
+			snapPoint = findVertexSnapPoint(dest.x + offset.x, dest.y + offset.y, this, canvas.grid.grid)
       	}
+      	dest = {
+		    x: snapPoint.x - offset.x,
+		    y: snapPoint.y - offset.y
+		}
+
 	    return collide ? {x: this.data.x, y: this.data.y} : {x: dest.x, y: dest.y};
 	}
 }

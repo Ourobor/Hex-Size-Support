@@ -1,4 +1,4 @@
-import { findMovementToken, findVertexSnapPoint } from './helpers.js'
+import { findMovementToken, findVertexSnapPoint, getAltSnappingFlag, getEvenSnappingFlag } from './helpers.js'
 
 //TODO rewrite this to only run my new stuff if needed
 Ruler.prototype._addWaypoint = function(point) {
@@ -15,10 +15,7 @@ Ruler.prototype._addWaypoint = function(point) {
 
   //if there is a token under the selected point, check for even/odd
   if(token != undefined){
-    let evenSnapping = token.getFlag("hex-size-support", "evenSnap");
-    if(token.data?.tempHexValues?.vertexSnap != undefined){
-      evenSnapping = token.data.tempHexValues.vertexSnap
-    }
+    let evenSnapping = getEvenSnappingFlag(token)
 
     //if the even snapping flag is set, we need to offset the position of the first waypoint to a vertex
     if(evenSnapping){
@@ -44,10 +41,7 @@ Ruler.prototype.measure = function(destination, {gridSpaces=true}={}) {
 
     let evenSnapping;
     if(token != undefined){
-      evenSnapping = token.getFlag("hex-size-support", "evenSnap");
-      if(token.data?.tempHexValues?.vertexSnap != undefined){
-        evenSnapping = token.data.tempHexValues.vertexSnap
-      }
+      evenSnapping = getEvenSnappingFlag(token)
     }
     //determine if this is measuring from an even token; even tokens need to have their snapping points offset
     if(evenSnapping){
@@ -130,10 +124,7 @@ Ruler.prototype.moveTokenCached = Ruler.prototype.moveToken;
 Ruler.prototype.moveToken = async function() {
     const token = this._getMovementToken();
 
-    let altSnapping = token.getFlag("hex-size-support", "altSnapping");
-    if(token.data?.tempHexValues?.altSnapping != undefined){
-      altSnapping = token.data.tempHexValues.altSnapping
-    }
+    let altSnapping = getAltSnappingFlag(token)
     
     //if using alt snapping, just put the center of the token to the waypoint 
     if(token != undefined && altSnapping){
