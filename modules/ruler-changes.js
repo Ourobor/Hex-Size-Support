@@ -33,6 +33,10 @@ Ruler.prototype._addWaypoint = function(point) {
   this.labels.addChild(new PIXI.Text("", CONFIG.canvasTextStyle));
 }
 
+window.findMovementToken = findMovementToken
+window.getEvenSnappingFlag = getEvenSnappingFlag
+window.findVertexSnapPoint = findVertexSnapPoint
+
 
 //overwrite measure to recalculate the location that ruler is going to move the token to, handling alt snapping stuff
 Ruler.prototype.measure = function(destination, {gridSpaces=true}={}) {
