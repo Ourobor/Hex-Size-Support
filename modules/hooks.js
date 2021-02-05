@@ -1,5 +1,5 @@
 import { HexTokenConfig } from './hex-token-config.js'
-import { findVertexSnapPoint, findMovementToken } from './helpers.js'
+import { findVertexSnapPoint, findMovementToken, getEvenSnappingFlag, getAltSnappingFlag, getAltOrientationFlag, getCenterOffset } from './helpers.js'
 
 //load in the hex token config's html template
 Hooks.once('init', async function(){
@@ -26,6 +26,10 @@ Hooks.once("ready", async function(){
     CONFIG.hexSizeSupport = {};
     CONFIG.hexSizeSupport.findVertexSnapPoint = findVertexSnapPoint
     CONFIG.hexSizeSupport.findMovementToken = findMovementToken
+    CONFIG.hexSizeSupport.getAltSnappingFlag = getAltSnappingFlag
+    CONFIG.hexSizeSupport.getAltOrientationFlag = getAltOrientationFlag
+    CONFIG.hexSizeSupport.getCenterOffset = getCenterOffset
+
 
     document.addEventListener("keydown", function(event){
         const key = game.keyboard.getKey(event);
