@@ -29,6 +29,7 @@ Hooks.once("ready", async function(){
     CONFIG.hexSizeSupport.getAltSnappingFlag = getAltSnappingFlag
     CONFIG.hexSizeSupport.getAltOrientationFlag = getAltOrientationFlag
     CONFIG.hexSizeSupport.getCenterOffset = getCenterOffset
+    CONFIG.hexSizeSupport.getEvenSnappingFlag = getEvenSnappingFlag
 
 
     document.addEventListener("keydown", function(event){
