@@ -149,12 +149,6 @@ export class HexTokenConfig extends FormApplication {
 
 
 	  	this.object.data.tempHexValues.borderSize = border;
-
-	  	let locked = this.object.data.tempHexValues.locked;
-	  	this.object.data.tempHexValues.locked = undefined;
-	  	this.object.shiftPosition(0,0);
-	  	this.object.data.tempHexValues.locked = locked
-	  	// this.object.refresh();
   	}
   	this._updateFlagCheckboxes()
 
