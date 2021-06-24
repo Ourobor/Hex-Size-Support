@@ -12,8 +12,8 @@ Token.prototype.refresh = (function () {
 			this.icon.pivot.x = this.data.tempHexValues.tempPivot.x || 0.0;	
 		}
 		else{
-			this.icon.pivot.y = this.getFlag("hex-size-support","pivoty") || 0.0;
-			this.icon.pivot.x = this.getFlag("hex-size-support","pivotx") || 0.0;
+			this.icon.pivot.y = this.document.getFlag("hex-size-support","pivoty") || 0.0;
+			this.icon.pivot.x = this.document.getFlag("hex-size-support","pivotx") || 0.0;
 		}
 
 		//execute existing refresh function
@@ -22,9 +22,9 @@ Token.prototype.refresh = (function () {
 		//Now handle rewriting the border if needed
 
 		//get the border size
-		let borderSize = this.data?.tempHexValues?.borderSize || this.getFlag("hex-size-support", "borderSize");
+		let borderSize = this.data?.tempHexValues?.borderSize || this.document.getFlag("hex-size-support", "borderSize");
 
-		let alwaysShowBorder = this.getFlag("hex-size-support", "alwaysShowBorder")
+		let alwaysShowBorder = this.document.getFlag("hex-size-support", "alwaysShowBorder")
 
 		//handle rerendering the borders for custom border offsets and resizing
 		if(alwaysShowBorder == true || (borderSize != undefined /*&& borderSize != 1*/)){
