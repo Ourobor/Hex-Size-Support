@@ -49,7 +49,7 @@ export function findMovementToken(x0,y0) {
  * @return the value of the altSnapping flag, or the temporary value if it's present
  */
 export function getAltSnappingFlag(token){
-    let altSnapping = token.getFlag("hex-size-support", "altSnapping");
+    let altSnapping = token.document.getFlag("hex-size-support", "altSnapping");
     if(token.data?.tempHexValues?.altSnapping != undefined){
         altSnapping = token.data.tempHexValues.altSnapping
     }
@@ -63,7 +63,7 @@ export function getAltSnappingFlag(token){
  * @return the value of the evenSnap flag, or the temporary value if it's present
  */
 export function getEvenSnappingFlag(token){
-    let evenSnapping = token.getFlag("hex-size-support", "evenSnap");
+    let evenSnapping = token.document.getFlag("hex-size-support", "evenSnap");
     if(token.data?.tempHexValues?.vertexSnap != undefined){
         evenSnapping = token.data.tempHexValues.vertexSnap
     }
@@ -77,7 +77,7 @@ export function getEvenSnappingFlag(token){
  * @return the value of the alternateOrientation flag, or the temporary value if it's present
  */
 export function getAltOrientationFlag(token){
-    let altOrientation = token.getFlag("hex-size-support","alternateOrientation");
+    let altOrientation = token.document.getFlag("hex-size-support","alternateOrientation");
     if(token.data?.tempHexValues?.alternateOrientation != undefined){
         altOrientation = token.data.tempHexValues.alternateOrientation
     }

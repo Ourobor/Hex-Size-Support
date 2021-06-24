@@ -22,7 +22,7 @@ export class HexTokenConfig extends FormApplication {
     	//prevent the arrowkeys from moving the token by setting a locking value
     	this.object.data.tempHexValues = {}
     	this.object.data.tempHexValues.locked = true;
-    	this.object.data.tempHexValues.tempPivot = {x: this.object.getFlag('hex-size-support','pivotx'), y:this.object.getFlag('hex-size-support','pivoty')}
+    	this.object.data.tempHexValues.tempPivot = {x: this.object.document.getFlag('hex-size-support','pivotx'), y:this.object.document.getFlag('hex-size-support','pivoty')}
 
     	// console.log(this)
 	}
@@ -44,14 +44,14 @@ export class HexTokenConfig extends FormApplication {
     return {
     	foo: this.foo || "",
     	options: this.options,
-    	pivotX: this.object.getFlag('hex-size-support','pivotx'),
-    	pivotY: this.object.getFlag('hex-size-support','pivoty'),
+    	pivotX: this.object.document.getFlag('hex-size-support','pivotx'),
+    	pivotY: this.object.document.getFlag('hex-size-support','pivoty'),
     	scale: this.object.data.scale,
-      alternateOrientation: this.object.getFlag('hex-size-support','alternateOrientation'),
-    	borderType: this.object.getFlag('hex-size-support','borderSize'),
-    	altSnapping: this.object.getFlag('hex-size-support','altSnapping'),
-    	vertexSnap: this.object.getFlag('hex-size-support','evenSnap'),
-      alwaysShowBorder: this.object.getFlag('hex-size-support','alwaysShowBorder'),
+      alternateOrientation: this.object.document.getFlag('hex-size-support','alternateOrientation'),
+    	borderType: this.object.document.getFlag('hex-size-support','borderSize'),
+    	altSnapping: this.object.document.getFlag('hex-size-support','altSnapping'),
+    	vertexSnap: this.object.document.getFlag('hex-size-support','evenSnap'),
+      alwaysShowBorder: this.object.document.getFlag('hex-size-support','alwaysShowBorder'),
       templates: templateArray
     };
   }
@@ -288,7 +288,7 @@ export class HexTokenConfig extends FormApplication {
     await token.setFlag("hex-size-support","alwaysShowBorder", formData.alwaysShowBorder);
     await token.setFlag("hex-size-support","alternateOrientation", formData.alternateOrientation);
 
-		await token.update(updateData);
+		await token.document.update(updateData);
 
 		token.data.width = Number(token.data.width);
 		token.data.height = Number(token.data.height);

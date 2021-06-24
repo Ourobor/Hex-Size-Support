@@ -158,7 +158,7 @@ Ruler.prototype.moveToken = async function() {
 		    }
 			const path = new Ray({x: token.x, y: token.y}, {x: (r.B.x - offset.x) , y: (r.B.y - offset.y)});
 
-			await token.update(path.B);
+			await token.document.update(path.B);
 			await token.animateMovement(path);
 	    }
 	    token._noAnimate = false;

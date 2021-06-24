@@ -41,7 +41,7 @@ Hooks.once("ready", async function(){
             if(key == "R" || key == "r"){
                 let tokens = canvas.tokens.placeables.filter(o => o._controlled); 
                 for(let token of canvas.tokens.controlled){
-                    let alternate = token.getFlag("hex-size-support","alternateOrientation") || false;
+                    let alternate = token.document.getFlag("hex-size-support","alternateOrientation") || false;
                     token.setFlag("hex-size-support","alternateOrientation", !alternate);
                 }
             }
