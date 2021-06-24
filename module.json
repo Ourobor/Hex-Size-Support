@@ -4,7 +4,7 @@
   "description": "Improves support for hexagonal tokens of sizes greater than one by altering the grid snapping rules",
   "author": "Ourobor",
   "version": "0.5.5",
-  "minimumCoreVersion": "0.6.0",
+  "minimumCoreVersion": "0.8.6",
   "compatibleCoreVersion": "0.8.6",
   "esmodules": [
   	"modules/hooks.js",
