@@ -24,7 +24,7 @@ export class HexTokenConfig extends FormApplication {
     	this.object.data.tempHexValues.locked = true;
     	this.object.data.tempHexValues.tempPivot = {x: this.object.document.getFlag('hex-size-support','pivotx'), y:this.object.document.getFlag('hex-size-support','pivoty')}
 
-    	// console.log(this)
+    	console.log(this)
 	}
 
 	static get defaultOptions() {
@@ -152,12 +152,21 @@ export class HexTokenConfig extends FormApplication {
   		this.object.data._source.width = border;
   		this.object.data._source.height = border;
 
-
 	  	this.object.data.tempHexValues.borderSize = border;
+
+	  	//scooch the token to get it to realign with the grid
+	  	this.object.setPosition(this.originalPosition.x, this.originalPosition.y).then( value => {
+		  	let locked = this.object.data.tempHexValues.locked;
+				this.object.data.tempHexValues.locked = undefined;
+		  	let moveData = this.object._getShiftedPosition(0, 0);
+		    this.object.document.update(moveData);
+		  	this.object.data.tempHexValues.locked = locked
+	  	})
   	}
   	this._updateFlagCheckboxes()
 
   	this.object.setPosition(this.originalPosition.x, this.originalPosition.y)
+
   	//tell the token to redraw the bars for the new size
   	this.object.drawBars()
   }
