@@ -147,6 +147,11 @@ export class HexTokenConfig extends FormApplication {
   		this.object.data.width = border;
   		this.object.data.height = border;
 
+  		//Update the source values as well. I think these are cached versions of what the backend returns. 
+  		//Listen, this is gross. I know it. The only alternatives I could think of were way worse :/
+  		this.object.data._source.width = border;
+  		this.object.data._source.height = border;
+
 
 	  	this.object.data.tempHexValues.borderSize = border;
   	}
@@ -310,6 +315,10 @@ export class HexTokenConfig extends FormApplication {
 	    this.object.data.scale = this.originalScale;
 	    this.object.data.height = this.originalHeight;
 	    this.object.data.width = this.originalWidth;
+
+	    //see hack description in _changeBorder
+	    this.object.data._source.width = this.originalWidth;
+  		this.object.data._source.height = this.originalHeight
 	}
 
     //trigger relevant redraws on the token
