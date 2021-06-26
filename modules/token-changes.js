@@ -264,3 +264,18 @@ Token.prototype._getShiftedPosition = function(dx, dy){
 	    return collide ? {x: this.data.x, y: this.data.y} : {x: dest.x, y: dest.y};
 	}
 }
+
+// We extend the definition of clone to also include cloning for temp values
+// because otherwise they aren't duplicated any time the object is cloned(like for drag and drop movement)
+Token.prototype.cloneCached = Token.prototype.clone;
+Token.prototype.clone = function() {
+	let clone = this.cloneCached();
+	
+	//copy temp values into the clone
+	if(this.data.tempHexValues != undefined){
+		clone.data.tempHexValues = {}
+		Object.assign(clone.data.tempHexValues, this.data.tempHexValues)
+	}
+	
+	return clone;
+}

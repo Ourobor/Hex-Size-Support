@@ -129,6 +129,8 @@ export class HexTokenConfig extends FormApplication {
 		
 		//reset the hit area because it might have changed with the other choices
 	  	this.object.hitArea = new PIXI.Rectangle(0, 0, this.object.w, this.object.h);
+	  	
+	  	this.object.setPosition(this.originalPosition.x, this.originalPosition.y)
 
   	}
   	else{
@@ -164,8 +166,6 @@ export class HexTokenConfig extends FormApplication {
 	  	})
   	}
   	this._updateFlagCheckboxes()
-
-  	this.object.setPosition(this.originalPosition.x, this.originalPosition.y)
 
   	//tell the token to redraw the bars for the new size
   	this.object.drawBars()
