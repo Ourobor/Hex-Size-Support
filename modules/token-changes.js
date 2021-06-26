@@ -276,6 +276,6 @@ Token.prototype.clone = function() {
 		clone.data.tempHexValues = {}
 		Object.assign(clone.data.tempHexValues, this.data.tempHexValues)
 	}
-	
+
 	return clone;
 }

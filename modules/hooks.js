@@ -42,7 +42,7 @@ Hooks.once("ready", async function(){
                 let tokens = canvas.tokens.placeables.filter(o => o._controlled); 
                 for(let token of canvas.tokens.controlled){
                     let alternate = token.document.getFlag("hex-size-support","alternateOrientation") || false;
-                    token.setFlag("hex-size-support","alternateOrientation", !alternate);
+                    token.document.setFlag("hex-size-support","alternateOrientation", !alternate);
                 }
             }
         }

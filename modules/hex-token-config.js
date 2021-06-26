@@ -129,7 +129,7 @@ export class HexTokenConfig extends FormApplication {
 		
 		//reset the hit area because it might have changed with the other choices
 	  	this.object.hitArea = new PIXI.Rectangle(0, 0, this.object.w, this.object.h);
-	  	
+
 	  	this.object.setPosition(this.originalPosition.x, this.originalPosition.y)
 
   	}
@@ -294,13 +294,13 @@ export class HexTokenConfig extends FormApplication {
 		token.data.scale = parseFloat(token.data.scale);
 
 		// console.log(formData)
-		await token.setFlag("hex-size-support","pivotx", formData.pivotx);
-		await token.setFlag("hex-size-support","pivoty", formData.pivoty);
-		await token.setFlag("hex-size-support","borderSize", formData.borderType);
-		await token.setFlag("hex-size-support","altSnapping", formData.altSnapping);
-		await token.setFlag("hex-size-support","evenSnap", formData.evenSnap);
-    await token.setFlag("hex-size-support","alwaysShowBorder", formData.alwaysShowBorder);
-    await token.setFlag("hex-size-support","alternateOrientation", formData.alternateOrientation);
+		await token.document.setFlag("hex-size-support","pivotx", formData.pivotx);
+		await token.document.setFlag("hex-size-support","pivoty", formData.pivoty);
+		await token.document.setFlag("hex-size-support","borderSize", formData.borderType);
+		await token.document.setFlag("hex-size-support","altSnapping", formData.altSnapping);
+		await token.document.setFlag("hex-size-support","evenSnap", formData.evenSnap);
+    await token.document.setFlag("hex-size-support","alwaysShowBorder", formData.alwaysShowBorder);
+    await token.document.setFlag("hex-size-support","alternateOrientation", formData.alternateOrientation);
 
 		await token.document.update(updateData);
 
