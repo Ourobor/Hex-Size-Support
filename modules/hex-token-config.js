@@ -10,7 +10,6 @@ export class HexTokenConfig extends FormApplication {
 	constructor(src, token, options={}) {
 		super(src, options);
 		this.object = src;
-		// this.tokenConfig = tokenConfig
 		this._related = null;
 
 		this.originalPosition = {x: this.object.x, y: this.object.y}
@@ -22,9 +21,7 @@ export class HexTokenConfig extends FormApplication {
     	//prevent the arrowkeys from moving the token by setting a locking value
     	this.object.data.tempHexValues = {}
     	this.object.data.tempHexValues.locked = true;
-    	this.object.data.tempHexValues.tempPivot = {x: this.object.getFlag('hex-size-support','pivotx'), y:this.object.getFlag('hex-size-support','pivoty')}
-
-    	// console.log(this)
+    	this.object.data.tempHexValues.tempPivot = {x: this.object.document.getFlag('hex-size-support','pivotx'), y:this.object.document.getFlag('hex-size-support','pivoty')}
 	}
 
 	static get defaultOptions() {
@@ -44,14 +41,14 @@ export class HexTokenConfig extends FormApplication {
     return {
     	foo: this.foo || "",
     	options: this.options,
-    	pivotX: this.object.getFlag('hex-size-support','pivotx'),
-    	pivotY: this.object.getFlag('hex-size-support','pivoty'),
+    	pivotX: this.object.document.getFlag('hex-size-support','pivotx'),
+    	pivotY: this.object.document.getFlag('hex-size-support','pivoty'),
     	scale: this.object.data.scale,
-      alternateOrientation: this.object.getFlag('hex-size-support','alternateOrientation'),
-    	borderType: this.object.getFlag('hex-size-support','borderSize'),
-    	altSnapping: this.object.getFlag('hex-size-support','altSnapping'),
-    	vertexSnap: this.object.getFlag('hex-size-support','evenSnap'),
-      alwaysShowBorder: this.object.getFlag('hex-size-support','alwaysShowBorder'),
+      alternateOrientation: this.object.document.getFlag('hex-size-support','alternateOrientation'),
+    	borderType: this.object.document.getFlag('hex-size-support','borderSize'),
+    	altSnapping: this.object.document.getFlag('hex-size-support','altSnapping'),
+    	vertexSnap: this.object.document.getFlag('hex-size-support','evenSnap'),
+      alwaysShowBorder: this.object.document.getFlag('hex-size-support','alwaysShowBorder'),
       templates: templateArray
     };
   }
@@ -75,7 +72,6 @@ export class HexTokenConfig extends FormApplication {
   }
 
   _applyTemplate(event){
-  	// console.log(this)
   	let index = this.form.elements.template.selectedIndex;
   	if(index > -1){
   		let options = templateArray[index];
@@ -85,7 +81,6 @@ export class HexTokenConfig extends FormApplication {
 
   		this.object.data.tempHexValues = {
   			tempPivot : options.pivot,
-  			// borderRotationOffset: options.borderOffset,
   			altSnapping: options.altSnapping,
   			vertexSnap: options.vertexSnap,
   			borderSize: options.borderSize
@@ -121,15 +116,17 @@ export class HexTokenConfig extends FormApplication {
 
   		this.object.data.height = 1;
   		this.object.data.width = 1;
+  		this.object.data._source.height = 1;
+  		this.object.data._source.width = 1;
 
-		// this.object.data.flags['hex-size-support'].altSnapping = false;
-		this.object.data.tempHexValues.altSnapping = false;
-		// this.object.data.flags['hex-size-support'].evenSnap = false;
-		this.object.data.tempHexValues.vertexSnap = false;
+			this.object.data.tempHexValues.altSnapping = false;
+			this.object.data.tempHexValues.vertexSnap = false;
 		
-		//reset the hit area because it might have changed with the other choices
+			//reset the hit area because it might have changed with the other choices
 	  	this.object.hitArea = new PIXI.Rectangle(0, 0, this.object.w, this.object.h);
 
+	  	//tell the token to return to its original position
+	  	this.object.setPosition(this.originalPosition.x, this.originalPosition.y)
   	}
   	else{
   		// this.object.data.flags['hex-size-support'].altSnapping = true;
@@ -147,18 +144,24 @@ export class HexTokenConfig extends FormApplication {
   		this.object.data.width = border;
   		this.object.data.height = border;
 
+  		//Update the source values as well. I think these are cached versions of what the backend returns. 
+  		//Listen, this is gross. I know it. The only alternatives I could think of were way worse :/
+  		this.object.data._source.width = border;
+  		this.object.data._source.height = border;
 
 	  	this.object.data.tempHexValues.borderSize = border;
 
-	  	let locked = this.object.data.tempHexValues.locked;
-	  	this.object.data.tempHexValues.locked = undefined;
-	  	this.object.shiftPosition(0,0);
-	  	this.object.data.tempHexValues.locked = locked
-	  	// this.object.refresh();
+	  	//scooch the token to get it to realign with the grid
+	  	this.object.setPosition(this.originalPosition.x, this.originalPosition.y).then( value => {
+				let locked = this.object.data.tempHexValues.locked;
+				this.object.data.tempHexValues.locked = undefined;
+				let moveData = this.object._getShiftedPosition(0, 0);
+				this.object.document.update(moveData);
+				this.object.data.tempHexValues.locked = locked
+	  	})
   	}
   	this._updateFlagCheckboxes()
 
-  	this.object.setPosition(this.originalPosition.x, this.originalPosition.y)
   	//tell the token to redraw the bars for the new size
   	this.object.drawBars()
   }
@@ -192,16 +195,10 @@ export class HexTokenConfig extends FormApplication {
 
     // Shift grid position
     else {
-		// if(this._tabs[0].active === "position"){
 			if ( up.includes(key) ) this._shiftPivot({deltaY: 1});
 			else if ( down.includes(key) ) this._shiftPivot({deltaY: -1});
 			else if ( left.includes(key) ) this._shiftPivot({deltaX: 1});
 			else if ( right.includes(key) ) this._shiftPivot({deltaX: -1});
-		// }
-		// else if(this._tabs[0].active === "snapping"){
-		// 	if ( left.includes(key) ) this._rotateBorder(-15);
-		// 	else if ( right.includes(key) ) this._rotateBorder(15);
-		// }
     }
 
   }
@@ -217,7 +214,6 @@ export class HexTokenConfig extends FormApplication {
 	token.data.tempHexValues.tempPivot.y = parseFloat(this.form.elements.pivoty.value);
 	token.data.scale = parseFloat(this.form.elements.scale.value);
   token.data.tempHexValues.alternateOrientation = this.form.elements.alternateOrientation.checked
-	// token.data.tempHexValues.borderRotationOffset = parseFloat(this.form.elements.borderOffset.value);
 	token.refresh();
   }
 
@@ -273,11 +269,16 @@ export class HexTokenConfig extends FormApplication {
 	}
 
 	async _updateObject(event, formData) {
+		//we need to undo that cludge from before because otherwise it won't actually save
+		//the height and width because foundry doesn't think it's changed (newheight == _source.height, etc)
+		this.object.data._source.height = this.originalHeight;
+		this.object.data._source.width = this.originalWidth;
+
 		let token = this.object;
 		let updateData = {
-				scale: formData.scale.toString(), 
-				height: token.data.height.toString(), 
-				width: token.data.width.toString()
+				scale: formData.scale, 
+				height: token.data.height, 
+				width: token.data.width
 		};
 
 
@@ -286,15 +287,15 @@ export class HexTokenConfig extends FormApplication {
 		token.data.scale = parseFloat(token.data.scale);
 
 		// console.log(formData)
-		await token.setFlag("hex-size-support","pivotx", formData.pivotx);
-		await token.setFlag("hex-size-support","pivoty", formData.pivoty);
-		await token.setFlag("hex-size-support","borderSize", formData.borderType);
-		await token.setFlag("hex-size-support","altSnapping", formData.altSnapping);
-		await token.setFlag("hex-size-support","evenSnap", formData.evenSnap);
-    await token.setFlag("hex-size-support","alwaysShowBorder", formData.alwaysShowBorder);
-    await token.setFlag("hex-size-support","alternateOrientation", formData.alternateOrientation);
+		await token.document.setFlag("hex-size-support","pivotx", formData.pivotx);
+		await token.document.setFlag("hex-size-support","pivoty", formData.pivoty);
+		await token.document.setFlag("hex-size-support","borderSize", formData.borderType);
+		await token.document.setFlag("hex-size-support","altSnapping", formData.altSnapping);
+		await token.document.setFlag("hex-size-support","evenSnap", formData.evenSnap);
+		await token.document.setFlag("hex-size-support","alwaysShowBorder", formData.alwaysShowBorder);
+		await token.document.setFlag("hex-size-support","alternateOrientation", formData.alternateOrientation);
 
-		await token.update(updateData);
+		await token.document.update(updateData);
 
 		token.data.width = Number(token.data.width);
 		token.data.height = Number(token.data.height);
@@ -316,6 +317,10 @@ export class HexTokenConfig extends FormApplication {
 	    this.object.data.scale = this.originalScale;
 	    this.object.data.height = this.originalHeight;
 	    this.object.data.width = this.originalWidth;
+
+	    //see hack description in _changeBorder
+			this.object.data._source.width = this.originalWidth;
+			this.object.data._source.height = this.originalHeight
 	}
 
     //trigger relevant redraws on the token

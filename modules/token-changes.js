@@ -12,8 +12,8 @@ Token.prototype.refresh = (function () {
 			this.icon.pivot.x = this.data.tempHexValues.tempPivot.x || 0.0;	
 		}
 		else{
-			this.icon.pivot.y = this.getFlag("hex-size-support","pivoty") || 0.0;
-			this.icon.pivot.x = this.getFlag("hex-size-support","pivotx") || 0.0;
+			this.icon.pivot.y = this.document.getFlag("hex-size-support","pivoty") || 0.0;
+			this.icon.pivot.x = this.document.getFlag("hex-size-support","pivotx") || 0.0;
 		}
 
 		//execute existing refresh function
@@ -22,9 +22,9 @@ Token.prototype.refresh = (function () {
 		//Now handle rewriting the border if needed
 
 		//get the border size
-		let borderSize = this.data?.tempHexValues?.borderSize || this.getFlag("hex-size-support", "borderSize");
+		let borderSize = this.data?.tempHexValues?.borderSize || this.document.getFlag("hex-size-support", "borderSize");
 
-		let alwaysShowBorder = this.getFlag("hex-size-support", "alwaysShowBorder")
+		let alwaysShowBorder = this.document.getFlag("hex-size-support", "alwaysShowBorder")
 
 		//handle rerendering the borders for custom border offsets and resizing
 		if(alwaysShowBorder == true || (borderSize != undefined /*&& borderSize != 1*/)){
@@ -111,7 +111,6 @@ Token.prototype.refresh = (function () {
 //overwrite the left click drop handling to snap the token correctly when you release dragging the token
 Token.prototype._cachedonDragLeftDrop = Token.prototype._onDragLeftDrop;
 Token.prototype._onDragLeftDrop = function(event) {
-
 	let altSnapping = getAltSnappingFlag(this)
 
 	if(altSnapping == true){
@@ -131,7 +130,7 @@ Token.prototype._onDragLeftDrop = function(event) {
 	    	let dest = {x: c.data.x, y: c.data.y};
 
 	    	//only enabling snapping when shift isn't held
-	    	if (!originalEvent.shiftKey) {
+	    	if (!originalEvent.shiftKey || (canvas.grid.type !== CONST.GRID_TYPES.GRIDLESS)) {
 		      	let evenSnapping = getEvenSnappingFlag(this);
 
 		      	let offset = getCenterOffset(this)
@@ -165,7 +164,7 @@ Token.prototype._onDragLeftDrop = function(event) {
 	      updates.push({_id: c._original.id, x: dest.x, y: dest.y});
 	      return updates;
 	    }, []);
-	    return canvas.scene.updateEmbeddedEntity(this.constructor.name, updates);
+	    return canvas.scene.updateEmbeddedDocuments("Token", updates);
 	}
 	else {
 		this._cachedonDragLeftDrop(event);
@@ -262,4 +261,19 @@ Token.prototype._getShiftedPosition = function(dx, dy){
 
 	    return collide ? {x: this.data.x, y: this.data.y} : {x: dest.x, y: dest.y};
 	}
+}
+
+// We extend the definition of clone to also include cloning for temp values
+// because otherwise they aren't duplicated any time the object is cloned(like for drag and drop movement)
+Token.prototype.cloneCached = Token.prototype.clone;
+Token.prototype.clone = function() {
+	let clone = this.cloneCached();
+	
+	//copy temp values into the clone
+	if(this.data.tempHexValues != undefined){
+		clone.data.tempHexValues = {}
+		Object.assign(clone.data.tempHexValues, this.data.tempHexValues)
+	}
+
+	return clone;
 }

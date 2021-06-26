@@ -8,7 +8,10 @@ Hooks.once('init', async function(){
 
 //Add the hex config button to the token hud
 Hooks.on("renderTokenHUD", async (app, html, token) => {
-		const configButton = html.find('.config');
+		var configButton = html.find('[data-action="config"]').first();
+		if (configButton === null) {
+			configButton = html.find('.config');
+		}
 		configButton.after($(`
 		<div class="control-icon config" id="hexConfig">
            	<img src="modules/hex-size-support/assets/hexIcon.svg" style="display: block; margin-left: auto; margin-right: auto;"/>
@@ -38,8 +41,8 @@ Hooks.once("ready", async function(){
             if(key == "R" || key == "r"){
                 let tokens = canvas.tokens.placeables.filter(o => o._controlled); 
                 for(let token of canvas.tokens.controlled){
-                    let alternate = token.getFlag("hex-size-support","alternateOrientation") || false;
-                    token.setFlag("hex-size-support","alternateOrientation", !alternate);
+                    let alternate = token.document.getFlag("hex-size-support","alternateOrientation") || false;
+                    token.document.setFlag("hex-size-support","alternateOrientation", !alternate);
                 }
             }
         }
@@ -50,4 +53,9 @@ Hooks.once("ready", async function(){
 My sincerest affection and love for the Pilot NET Discord community. Without your support, patience and good feels I wouldn't have 
 ever gotten this far. This is all for you now, I'm sorry I made you all wait for so long.
  - Ember Scaleborne <3
+
+In regards to the 0.8.6 foundry update,
+    My deepest thanks for the efforts of @FolkvangrForgent, @Eranziel, @The-E and @Bolts. Without your hard work and nagging, this update would
+have been a lot later than it had any right to be be. Life seems to really enjoy kicking me right when a new update comes out >.>
+ - Ember Scaleborne 06/26/2021 <3
 */
