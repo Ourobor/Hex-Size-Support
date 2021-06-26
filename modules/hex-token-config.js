@@ -23,8 +23,6 @@ export class HexTokenConfig extends FormApplication {
     	this.object.data.tempHexValues = {}
     	this.object.data.tempHexValues.locked = true;
     	this.object.data.tempHexValues.tempPivot = {x: this.object.document.getFlag('hex-size-support','pivotx'), y:this.object.document.getFlag('hex-size-support','pivoty')}
-
-    	console.log(this)
 	}
 
 	static get defaultOptions() {
@@ -158,11 +156,11 @@ export class HexTokenConfig extends FormApplication {
 
 	  	//scooch the token to get it to realign with the grid
 	  	this.object.setPosition(this.originalPosition.x, this.originalPosition.y).then( value => {
-		  	let locked = this.object.data.tempHexValues.locked;
+				let locked = this.object.data.tempHexValues.locked;
 				this.object.data.tempHexValues.locked = undefined;
-		  	let moveData = this.object._getShiftedPosition(0, 0);
-		    this.object.document.update(moveData);
-		  	this.object.data.tempHexValues.locked = locked
+				let moveData = this.object._getShiftedPosition(0, 0);
+				this.object.document.update(moveData);
+				this.object.data.tempHexValues.locked = locked
 	  	})
   	}
   	this._updateFlagCheckboxes()
@@ -304,8 +302,8 @@ export class HexTokenConfig extends FormApplication {
 		await token.document.setFlag("hex-size-support","borderSize", formData.borderType);
 		await token.document.setFlag("hex-size-support","altSnapping", formData.altSnapping);
 		await token.document.setFlag("hex-size-support","evenSnap", formData.evenSnap);
-    await token.document.setFlag("hex-size-support","alwaysShowBorder", formData.alwaysShowBorder);
-    await token.document.setFlag("hex-size-support","alternateOrientation", formData.alternateOrientation);
+		await token.document.setFlag("hex-size-support","alwaysShowBorder", formData.alwaysShowBorder);
+		await token.document.setFlag("hex-size-support","alternateOrientation", formData.alternateOrientation);
 
 		await token.document.update(updateData);
 
@@ -331,8 +329,8 @@ export class HexTokenConfig extends FormApplication {
 	    this.object.data.width = this.originalWidth;
 
 	    //see hack description in _changeBorder
-	    this.object.data._source.width = this.originalWidth;
-  		this.object.data._source.height = this.originalHeight
+			this.object.data._source.width = this.originalWidth;
+			this.object.data._source.height = this.originalHeight
 	}
 
     //trigger relevant redraws on the token

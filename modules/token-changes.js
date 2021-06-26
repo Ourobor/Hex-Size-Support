@@ -110,9 +110,7 @@ Token.prototype.refresh = (function () {
 
 //overwrite the left click drop handling to snap the token correctly when you release dragging the token
 Token.prototype._cachedonDragLeftDrop = Token.prototype._onDragLeftDrop;
-
 Token.prototype._onDragLeftDrop = function(event) {
-	// console.log(Token.prototype._cachedonDragLeftDrop)
 	let altSnapping = getAltSnappingFlag(this)
 
 	if(altSnapping == true){
@@ -121,7 +119,7 @@ Token.prototype._onDragLeftDrop = function(event) {
 		const preview = game.settings.get("core", "tokenDragPreview");
 
 	    // Ensure the destination is within bounds
-	    if (!canvas.grid.hitArea.contains(destination.x, destination.y) ) return false;
+	    if ( !canvas.grid.hitArea.contains(destination.x, destination.y) ) return false;
 
 	    // Compute the final dropped positions
 	    const updates = clones.reduce((updates, c) => {
@@ -132,7 +130,7 @@ Token.prototype._onDragLeftDrop = function(event) {
 	    	let dest = {x: c.data.x, y: c.data.y};
 
 	    	//only enabling snapping when shift isn't held
-	    	if (!originalEvent.shiftKey && (canvas.grid.type !== CONST.GRID_TYPES.GRIDLES)) {
+	    	if (!originalEvent.shiftKey || (canvas.grid.type !== CONST.GRID_TYPES.GRIDLESS)) {
 		      	let evenSnapping = getEvenSnappingFlag(this);
 
 		      	let offset = getCenterOffset(this)
