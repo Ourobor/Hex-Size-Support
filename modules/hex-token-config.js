@@ -10,7 +10,6 @@ export class HexTokenConfig extends FormApplication {
 	constructor(src, token, options={}) {
 		super(src, options);
 		this.object = src;
-		// this.tokenConfig = tokenConfig
 		this._related = null;
 
 		this.originalPosition = {x: this.object.x, y: this.object.y}
@@ -82,7 +81,6 @@ export class HexTokenConfig extends FormApplication {
 
   		this.object.data.tempHexValues = {
   			tempPivot : options.pivot,
-  			// borderRotationOffset: options.borderOffset,
   			altSnapping: options.altSnapping,
   			vertexSnap: options.vertexSnap,
   			borderSize: options.borderSize
@@ -118,10 +116,10 @@ export class HexTokenConfig extends FormApplication {
 
   		this.object.data.height = 1;
   		this.object.data.width = 1;
+  		this.object.data._source.height = 1;
+  		this.object.data._source.width = 1;
 
-			// this.object.data.flags['hex-size-support'].altSnapping = false;
 			this.object.data.tempHexValues.altSnapping = false;
-			// this.object.data.flags['hex-size-support'].evenSnap = false;
 			this.object.data.tempHexValues.vertexSnap = false;
 		
 			//reset the hit area because it might have changed with the other choices
@@ -197,16 +195,10 @@ export class HexTokenConfig extends FormApplication {
 
     // Shift grid position
     else {
-		// if(this._tabs[0].active === "position"){
 			if ( up.includes(key) ) this._shiftPivot({deltaY: 1});
 			else if ( down.includes(key) ) this._shiftPivot({deltaY: -1});
 			else if ( left.includes(key) ) this._shiftPivot({deltaX: 1});
 			else if ( right.includes(key) ) this._shiftPivot({deltaX: -1});
-		// }
-		// else if(this._tabs[0].active === "snapping"){
-		// 	if ( left.includes(key) ) this._rotateBorder(-15);
-		// 	else if ( right.includes(key) ) this._rotateBorder(15);
-		// }
     }
 
   }
@@ -222,7 +214,6 @@ export class HexTokenConfig extends FormApplication {
 	token.data.tempHexValues.tempPivot.y = parseFloat(this.form.elements.pivoty.value);
 	token.data.scale = parseFloat(this.form.elements.scale.value);
   token.data.tempHexValues.alternateOrientation = this.form.elements.alternateOrientation.checked
-	// token.data.tempHexValues.borderRotationOffset = parseFloat(this.form.elements.borderOffset.value);
 	token.refresh();
   }
 
