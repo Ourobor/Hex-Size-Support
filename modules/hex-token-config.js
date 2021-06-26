@@ -281,6 +281,9 @@ export class HexTokenConfig extends FormApplication {
 	}
 
 	async _updateObject(event, formData) {
+		this.object.data._source.height = this.originalHeight;
+		this.object.data._source.width = this.originalWidth;
+
 		let token = this.object;
 		let updateData = {
 				scale: formData.scale, 
