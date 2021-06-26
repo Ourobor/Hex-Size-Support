@@ -73,7 +73,6 @@ export class HexTokenConfig extends FormApplication {
   }
 
   _applyTemplate(event){
-  	console.log(this)
   	let index = this.form.elements.template.selectedIndex;
   	if(index > -1){
   		let options = templateArray[index];
@@ -120,16 +119,16 @@ export class HexTokenConfig extends FormApplication {
   		this.object.data.height = 1;
   		this.object.data.width = 1;
 
-		// this.object.data.flags['hex-size-support'].altSnapping = false;
-		this.object.data.tempHexValues.altSnapping = false;
-		// this.object.data.flags['hex-size-support'].evenSnap = false;
-		this.object.data.tempHexValues.vertexSnap = false;
+			// this.object.data.flags['hex-size-support'].altSnapping = false;
+			this.object.data.tempHexValues.altSnapping = false;
+			// this.object.data.flags['hex-size-support'].evenSnap = false;
+			this.object.data.tempHexValues.vertexSnap = false;
 		
-		//reset the hit area because it might have changed with the other choices
+			//reset the hit area because it might have changed with the other choices
 	  	this.object.hitArea = new PIXI.Rectangle(0, 0, this.object.w, this.object.h);
 
+	  	//tell the token to return to its original position
 	  	this.object.setPosition(this.originalPosition.x, this.originalPosition.y)
-
   	}
   	else{
   		// this.object.data.flags['hex-size-support'].altSnapping = true;
