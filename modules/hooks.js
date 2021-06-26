@@ -53,4 +53,9 @@ Hooks.once("ready", async function(){
 My sincerest affection and love for the Pilot NET Discord community. Without your support, patience and good feels I wouldn't have 
 ever gotten this far. This is all for you now, I'm sorry I made you all wait for so long.
  - Ember Scaleborne <3
+
+In regards to the 0.8.6 foundry update,
+    My deepest thanks for the efforts of @FolkvangrForgent, @Eranziel, and @The-E. Without your hard work and nagging, this update would
+have been a lot later than it had any right to be be. Life seems to really enjoy kicking me right when a new update comes out >.>
+ - Ember Scaleborne 06/26/2021 <3
 */

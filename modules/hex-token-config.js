@@ -281,6 +281,8 @@ export class HexTokenConfig extends FormApplication {
 	}
 
 	async _updateObject(event, formData) {
+		//we need to undo that cludge from before because otherwise it won't actually save
+		//the height and width because foundry doesn't think it's changed (newheight == _source.height, etc)
 		this.object.data._source.height = this.originalHeight;
 		this.object.data._source.width = this.originalWidth;
 
