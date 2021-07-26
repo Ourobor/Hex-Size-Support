@@ -37,15 +37,21 @@ HexSizeSupportAddWaypoint = function(wrapped, point) {
     }
      
   } 
-  }
-  this.waypoints.push(new PIXI.Point(center[0], center[1]));
-  this.labels.addChild(new PIXI.Text("", CONFIG.canvasTextStyle));
+
+  return wrapped(point);
 }
 
 
 //overwrite measure to recalculate the location that ruler is going to move the token to, handling alt snapping stuff
-Ruler.prototype.measure = function(destination, {gridSpaces=true}={}) {
-	  let token = findMovementToken(this.waypoints[0].x,this.waypoints[0].y);	
+HexSizeSupportMeasure = function(wrapped, destination, {gridSpaces=true}={}) {
+  // If not on a hex grid, can just return normally.
+  // Otherwise, modify the destination and return
+  if(canvas.grid.type === CONST.GRID_TYPES.HEXODDR || 
+     canvas.grid.type === CONST.GRID_TYPES.HEXEVENR ||
+     canvas.grid.type === CONST.GRID_TYPES.HEXODDQ ||
+     canvas.grid.type === CONST.GRID_TYPES.HEXEVENQ) {
+     
+    let token = findMovementToken(this.waypoints[0].x,this.waypoints[0].y);	
     let center = canvas.grid.getCenter(destination.x, destination.y);
 
     let evenSnapping;
@@ -61,73 +67,19 @@ Ruler.prototype.measure = function(destination, {gridSpaces=true}={}) {
     }
     else{
     	destination = new PIXI.Point(...canvas.grid.getCenter(destination.x, destination.y));
-    }
+    }  
+  }
+  
+  return wrapped(destination, {gridSpaces = gridSpaces});
+}
 
-	//I'm annoyed because above was all that needed to change in the original method >_>
-
-    const waypoints = this.waypoints.concat([destination]);
-    const r = this.ruler;
-    this.destination = destination;
-
-    // Iterate over waypoints and construct segment rays
-    const segments = [];
-    for ( let [i, dest] of waypoints.slice(1).entries() ) {
-      const origin = waypoints[i];
-      const label = this.labels.children[i];
-      const ray = new Ray(origin, dest);
-      if ( ray.distance < 10 ) {
-        if ( label ) label.visible = false;
-        continue;
-      }
-      segments.push({ray, label});
-    }
-
-    // Compute measured distance
-    const distances = canvas.grid.measureDistances(segments, {gridSpaces});
-    let totalDistance = 0;
-    for ( let [i, d] of distances.entries() ) {
-      totalDistance += d;
-      let s = segments[i];
-      s.last = i === (segments.length - 1);
-      s.distance = d;
-      s.text = this._getSegmentLabel(d, totalDistance, s.last);
-    }
-
-    // Clear the grid highlight layer
-    const hlt = canvas.grid.highlightLayers[this.name] || canvas.grid.addHighlightLayer(this.name);
-    hlt.clear();
-
-    // Draw measured path
-    r.clear();
-    for ( let s of segments ) {
-      const {ray, label, text, last} = s;
-
-      // Draw line segment
-      r.lineStyle(6, 0x000000, 0.5).moveTo(ray.A.x, ray.A.y).lineTo(ray.B.x, ray.B.y)
-       .lineStyle(4, this.color, 0.25).moveTo(ray.A.x, ray.A.y).lineTo(ray.B.x, ray.B.y);
-
-      // Draw the distance label just after the endpoint of the segment
-      if ( label ) {
-        label.text = text;
-        label.alpha = last ? 1.0 : 0.5;
-        label.visible = true;
-        let labelPosition = ray.project((ray.distance + 50) / ray.distance);
-        label.position.set(labelPosition.x, labelPosition.y);
-      }
-
-      // Highlight grid positions
-      this._highlightMeasurement(ray);
-    }
 
     // Draw endpoints
-    for ( let p of waypoints ) {
+HexSizeSupportAnimateToken = async function(wrapped, token, ray, dx, dy, segment_num) {
       r.lineStyle(2, 0x000000, 0.5).beginFill(this.color, 0.25).drawCircle(p.x, p.y, 8);
     }
 
-    // Return the measured segments
-    return segments;
-  }
-
+}
 //cache the old move token function so we can run it if the token doesn't need alternative snapping logic
 Ruler.prototype.moveTokenCached = Ruler.prototype.moveToken;
 Ruler.prototype.moveToken = async function() {
