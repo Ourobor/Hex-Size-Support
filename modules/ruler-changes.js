@@ -72,62 +72,35 @@ HexSizeSupportMeasure = function(wrapped, destination, {gridSpaces=true}={}) {
   
   return wrapped(destination, {gridSpaces = gridSpaces});
 }
-
-
-    // Draw endpoints
+  
+/* Wrap the libRuler animateToken method
+ * See libRuler scripts/ruler-move-token.js for specifics.
+ * Here, just modifying the offset. 
+ * @param {Token} token The token that is being animated.
+ * @param {Ray} ray The ray indicating the segment that should be moved.
+ * @param {number} dx Offset in x direction relative to the Token top-left.
+ * @param {number} dy Offset in y direction relative to the Token top-left.
+ * @param {integer} segment_num The segment number, where 1 is the
+ */
 HexSizeSupportAnimateToken = async function(wrapped, token, ray, dx, dy, segment_num) {
-      r.lineStyle(2, 0x000000, 0.5).beginFill(this.color, 0.25).drawCircle(p.x, p.y, 8);
-    }
-
-}
-//cache the old move token function so we can run it if the token doesn't need alternative snapping logic
-Ruler.prototype.moveTokenCached = Ruler.prototype.moveToken;
-Ruler.prototype.moveToken = async function() {
-    const token = this._getMovementToken();
-
-    let altSnapping = getAltSnappingFlag(token)
-    
-    //if using alt snapping, just put the center of the token to the waypoint 
-    if(token != undefined && altSnapping){
-  		let wasPaused = game.paused;
-  		if ( wasPaused && !game.user.isGM ) {
-        ui.notifications.warn(game.i18n.localize("GAME.PausedWarning"));
-        return false;
-      }
-  		if ( !this.visible || !this.destination ) return false;
-  		const token = this._getMovementToken();
-  		if ( !token ) return;
-      // Get the movement rays and check collision along each Ray
-      // These rays are center-to-center for the purposes of collision checking
-    	const rays = this._getRaysFromWaypoints(this.waypoints, this.destination);
-
-	    let hasCollision = rays.some(r => canvas.walls.checkCollision(r));
-	    if ( hasCollision ) {
-	      ui.notifications.error(game.i18n.localize("ERROR.TokenCollide"));
-	      return;
-	    }
-
-	    // Execute the movement path.
-	    // Transform each center-to-center ray into a top-left to top-left ray using the prior token offsets.
-	    this._state = Ruler.STATES.MOVING;
-	    token._noAnimate = true;
-	    for ( let r of rays ) {
-			if ( !wasPaused && game.paused ) break;
-			let offset = {
+  // If not on a hex grid, can just return normally.
+  // Otherwise, modify the waypoint and return
+  const offset = {x: 0, y: 0};
+  
+  if(canvas.grid.type === CONST.GRID_TYPES.HEXODDR || 
+     canvas.grid.type === CONST.GRID_TYPES.HEXEVENR ||
+     canvas.grid.type === CONST.GRID_TYPES.HEXODDQ ||
+     canvas.grid.type === CONST.GRID_TYPES.HEXEVENQ) {
+     
+     let altSnapping = getAltSnappingFlag(token)
+     
+     if(token != undefined && altSnapping){
+       offset = {
 		    	x: (token.w) / 2,
 				  y: (token.h) / 2
 		    }
-			const path = new Ray({x: token.x, y: token.y}, {x: (r.B.x - offset.x) , y: (r.B.y - offset.y)});
-
-			await token.document.update(path.B);
-			await token.animateMovement(path);
-	    }
-	    token._noAnimate = false;
-
-	    // Once all animations are complete we can clear the ruler
-	    this._endMeasurement();
-    }
-    else{
-    	return this.moveTokenCached();
-    }
+     }  
   }
+  
+  return wrapped(token, ray, dx - offset.x, dy - offset.y, segment_num);
+}
