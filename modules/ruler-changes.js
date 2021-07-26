@@ -1,7 +1,7 @@
 import { findMovementToken, findVertexSnapPoint, getAltSnappingFlag, getEvenSnappingFlag } from './helpers.js'
 
 //TODO rewrite this to only run my new stuff if needed
-HexSizeSupportAddWaypoint = function(wrapped, point) {
+export function HexSizeSupportAddWaypoint(wrapped, point) {
   // If not on a hex grid, can just return normally.
   // Otherwise, modify the waypoint and return
   if(canvas.grid.type === CONST.GRID_TYPES.HEXODDR || 
@@ -43,7 +43,7 @@ HexSizeSupportAddWaypoint = function(wrapped, point) {
 
 
 //overwrite measure to recalculate the location that ruler is going to move the token to, handling alt snapping stuff
-HexSizeSupportMeasure = function(wrapped, destination, {gridSpaces=true}={}) {
+export function HexSizeSupportMeasure(wrapped, destination, {gridSpaces=true}={}) {
   // If not on a hex grid, can just return normally.
   // Otherwise, modify the destination and return
   if(canvas.grid.type === CONST.GRID_TYPES.HEXODDR || 
@@ -70,7 +70,7 @@ HexSizeSupportMeasure = function(wrapped, destination, {gridSpaces=true}={}) {
     }  
   }
   
-  return wrapped(destination, {gridSpaces = gridSpaces});
+  return wrapped(destination, {gridSpaces: gridSpaces});
 }
   
 /* Wrap the libRuler animateToken method
@@ -82,9 +82,11 @@ HexSizeSupportMeasure = function(wrapped, destination, {gridSpaces=true}={}) {
  * @param {number} dy Offset in y direction relative to the Token top-left.
  * @param {integer} segment_num The segment number, where 1 is the
  */
-HexSizeSupportAnimateToken = async function(wrapped, token, ray, dx, dy, segment_num) {
+export async function HexSizeSupportAnimateToken(wrapped, token, ray, dx, dy, segment_num) {
   // If not on a hex grid, can just return normally.
   // Otherwise, modify the waypoint and return
+  console.log(`HexSize Animate Token`);
+
   const offset = {x: 0, y: 0};
   
   if(canvas.grid.type === CONST.GRID_TYPES.HEXODDR || 
@@ -100,7 +102,8 @@ HexSizeSupportAnimateToken = async function(wrapped, token, ray, dx, dy, segment
 				  y: (token.h) / 2
 		    }
      }  
+    console.log(`HexSize|Offsetting ${offset.x}, ${offset.y}`);
   }
   
-  return wrapped(token, ray, dx - offset.x, dy - offset.y, segment_num);
+  return wrapped(token, ray, dx - offset.x, dy + offset.y, segment_num);
 }
