@@ -12,6 +12,13 @@
     "modules/helpers.js",
     "modules/token-changes.js"
   ],
+  
+  "dependencies": [
+    {
+      "name": "lib-wrapper",
+      "manifest": "https://raw.githubusercontent.com/ruipin/fvtt-lib-wrapper/master/module.json"
+    }],
+  
   "url": "https://github.com/Ourobor/Hex-Size-Support",
   "manifest": "https://raw.githubusercontent.com/Ourobor/Hex-Size-Support/1.1.0/module.json",
   "download": "https://github.com/Ourobor/Hex-Size-Support/archive/refs/tags/1.1.0.zip"
