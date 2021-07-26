@@ -1,33 +1,42 @@
 import { findMovementToken, findVertexSnapPoint, getAltSnappingFlag, getEvenSnappingFlag } from './helpers.js'
 
 //TODO rewrite this to only run my new stuff if needed
-Ruler.prototype._addWaypoint = function(point) {
-  let center = canvas.grid.getCenter(point.x, point.y);
+HexSizeSupportAddWaypoint = function(wrapped, point) {
+  // If not on a hex grid, can just return normally.
+  // Otherwise, modify the waypoint and return
+  if(canvas.grid.type === CONST.GRID_TYPES.HEXODDR || 
+     canvas.grid.type === CONST.GRID_TYPES.HEXEVENR ||
+     canvas.grid.type === CONST.GRID_TYPES.HEXODDQ ||
+     canvas.grid.type === CONST.GRID_TYPES.HEXEVENQ) {
+     
+    let center = canvas.grid.getCenter(point.x, point.y);
 
-	//retrieve the token this ruler is measure from if possible
-	let token;
-	if(this.waypoints.length == 0){
-		token = findMovementToken(point.x,point.y);
-	}
-	else{
-		token = findMovementToken(this.waypoints[0].x,this.waypoints[0].y);	
-	}
-
-  //if there is a token under the selected point, check for even/odd
-  if(token != undefined){
-    let evenSnapping = getEvenSnappingFlag(token)
-
-    //if the even snapping flag is set, we need to offset the position of the first waypoint to a vertex
-    if(evenSnapping){
-
-      //get the new center location for the ruler
-      let newPoints = findVertexSnapPoint(point.x, point.y, token, canvas.grid.grid)
-
-    	//update the center
-    	center[0] = newPoints.x;
-    	center[1] = newPoints.y;
-      
+    //retrieve the token this ruler is measure from if possible
+    let token;
+    if(this.waypoints.length == 0){
+      token = findMovementToken(point.x,point.y);
     }
+    else{
+      token = findMovementToken(this.waypoints[0].x,this.waypoints[0].y);	
+    }
+
+    //if there is a token under the selected point, check for even/odd
+    if(token != undefined){
+      let evenSnapping = getEvenSnappingFlag(token)
+
+      //if the even snapping flag is set, we need to offset the position of the first waypoint to a vertex
+      if(evenSnapping){
+
+        //get the new center location for the ruler
+        let newPoints = findVertexSnapPoint(point.x, point.y, token, canvas.grid.grid)
+
+        //update the center
+        point.x = newPoints.x;
+        point.y = newPoints.y
+      }
+    }
+     
+  } 
   }
   this.waypoints.push(new PIXI.Point(center[0], center[1]));
   this.labels.addChild(new PIXI.Text("", CONFIG.canvasTextStyle));
