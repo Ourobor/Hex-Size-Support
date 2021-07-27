@@ -85,7 +85,7 @@ export function HexSizeSupportMeasure(wrapped, destination, {gridSpaces=true}={}
 export async function HexSizeSupportAnimateToken(wrapped, token, ray, dx, dy, segment_num) {
   // If not on a hex grid, can just return normally.
   // Otherwise, modify the waypoint and return
-  console.log(`HexSize Animate Token ${token.id} with dx/dy ${dx}, {dy}`);
+  // console.log(`HexSize Animate Token ${token.id} with dx/dy ${dx}, {dy}`);
 
   if(canvas.grid.type === CONST.GRID_TYPES.HEXODDR ||
      canvas.grid.type === CONST.GRID_TYPES.HEXEVENR ||
@@ -109,7 +109,7 @@ export async function HexSizeSupportAnimateToken(wrapped, token, ray, dx, dy, se
        dx = ray.B.x - offset.x - old_dest[0];
        dy = ray.B.y - offset.y - old_dest[1];
 
-       console.log(`HexSize|Offsetting ${offset.x}, ${offset.y}; dx/dy ${dx}, ${dy}`);
+       //console.log(`HexSize|Offsetting ${offset.x}, ${offset.y}; dx/dy ${dx}, ${dy}`);
     }
   }
 
