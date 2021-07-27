@@ -85,25 +85,33 @@ export function HexSizeSupportMeasure(wrapped, destination, {gridSpaces=true}={}
 export async function HexSizeSupportAnimateToken(wrapped, token, ray, dx, dy, segment_num) {
   // If not on a hex grid, can just return normally.
   // Otherwise, modify the waypoint and return
-  console.log(`HexSize Animate Token`);
+  console.log(`HexSize Animate Token ${token.id} with dx/dy ${dx}, {dy}`);
 
-  const offset = {x: 0, y: 0};
-  
-  if(canvas.grid.type === CONST.GRID_TYPES.HEXODDR || 
+  if(canvas.grid.type === CONST.GRID_TYPES.HEXODDR ||
      canvas.grid.type === CONST.GRID_TYPES.HEXEVENR ||
      canvas.grid.type === CONST.GRID_TYPES.HEXODDQ ||
      canvas.grid.type === CONST.GRID_TYPES.HEXEVENQ) {
-     
+
      let altSnapping = getAltSnappingFlag(token)
-     
+
      if(token != undefined && altSnapping){
-       offset = {
-		    	x: (token.w) / 2,
-				  y: (token.h) / 2
-		    }
-     }  
-    console.log(`HexSize|Offsetting ${offset.x}, ${offset.y}`);
+       const offset = {
+                        x: (token.w) / 2,
+                                  y: (token.h) / 2
+                    }
+       // token offset in previous Hex Size Support created a path using the token center - offset of half token width and half token height
+       // 0.8.8 and libRuler take the top left and add dx/dy to it.
+       // so the offset here must be from the top left according to canvas.grid.getTopLeft(ray.B.x, ray.B.y);
+       // back-calculate the center location to get the new dx/dy. E.g.:
+       //   old_dest = canvas.grid.getTopLeft(ray.B.x, ray.B.y); (Foundry method)
+       //   path_dest.x = old_dest[0] + dx (Foundry method) = ray.B.x - offset.x (Hex method)
+       const old_dest = canvas.grid.getTopLeft(ray.B.x, ray.B.y);
+       dx = ray.B.x - offset.x - old_dest[0];
+       dy = ray.B.y - offset.y - old_dest[1];
+
+       console.log(`HexSize|Offsetting ${offset.x}, ${offset.y}; dx/dy ${dx}, ${dy}`);
+    }
   }
-  
-  return wrapped(token, ray, dx - offset.x, dy + offset.y, segment_num);
+
+  return wrapped(token, ray, dx, dy, segment_num);
 }
