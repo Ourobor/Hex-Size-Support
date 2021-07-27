@@ -1,5 +1,6 @@
 import { HexTokenConfig } from './hex-token-config.js'
 import { findVertexSnapPoint, findMovementToken, getEvenSnappingFlag, getAltSnappingFlag, getAltOrientationFlag, getCenterOffset } from './helpers.js'
+import { registerHexRulerPatches } from "./patching.js";
 
 //load in the hex token config's html template
 Hooks.once('init', async function(){
@@ -48,6 +49,11 @@ Hooks.once("ready", async function(){
         }
     });
 })
+
+Hooks.once('libRulerReady', async function() {
+  registerHexRulerPatches();
+});
+
 
 /**
 My sincerest affection and love for the Pilot NET Discord community. Without your support, patience and good feels I wouldn't have 
