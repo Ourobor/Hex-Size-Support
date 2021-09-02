@@ -1,4 +1,4 @@
-import { findVertexSnapPoint, getAltSnappingFlag, getEvenSnappingFlag, getAltOrientationFlag, getCenterOffset } from './helpers.js'
+import { findVertexSnapPoint, getAltSnappingFlag, getEvenSnappingFlag, getAltOrientationFlag, getCenterOffset, isHexGrid } from './helpers.js'
 import { borderData } from './token-border-config.js'
 
 //we intercept refresh method(questionably) to set the pivot of the token correctly
@@ -18,6 +18,7 @@ Token.prototype.refresh = (function () {
 
 		//execute existing refresh function
 		const p = cached.apply(this, arguments);
+		if (!isHexGrid()) return p;
 
 		//Now handle rewriting the border if needed
 
@@ -113,7 +114,7 @@ Token.prototype._cachedonDragLeftDrop = Token.prototype._onDragLeftDrop;
 Token.prototype._onDragLeftDrop = function(event) {
 	let altSnapping = getAltSnappingFlag(this)
 
-	if(altSnapping == true){
+	if(altSnapping == true && isHexGrid()){
 		const clones = event.data.clones || [];
 	    const {originalEvent, destination} = event.data;
 		const preview = game.settings.get("core", "tokenDragPreview");
@@ -182,7 +183,7 @@ Token.prototype._getShiftedPosition = function(dx, dy){
 	let altSnapping = getAltSnappingFlag(this)
 
 	//run original code if no flag for alt-snapping
-	if(!altSnapping == true){
+	if(!altSnapping == true || !isHexGrid()){
 		return this._getShiftedPositionCached(dx,dy);
 	}
 	else{

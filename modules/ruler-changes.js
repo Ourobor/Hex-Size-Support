@@ -1,4 +1,4 @@
-import { findMovementToken, findVertexSnapPoint, getAltSnappingFlag, getEvenSnappingFlag } from './helpers.js'
+import { findMovementToken, findVertexSnapPoint, getAltSnappingFlag, getEvenSnappingFlag, isHexGrid } from './helpers.js'
 
 //TODO rewrite this to only run my new stuff if needed
 Ruler.prototype._addWaypoint = function(point) {
@@ -14,7 +14,7 @@ Ruler.prototype._addWaypoint = function(point) {
 	}
 
   //if there is a token under the selected point, check for even/odd
-  if(token != undefined){
+  if(token != undefined && isHexGrid()){
     let evenSnapping = getEvenSnappingFlag(token)
 
     //if the even snapping flag is set, we need to offset the position of the first waypoint to a vertex
@@ -40,7 +40,7 @@ Ruler.prototype.measure = function(destination, {gridSpaces=true}={}) {
     let center = canvas.grid.getCenter(destination.x, destination.y);
 
     let evenSnapping;
-    if(token != undefined){
+    if(token != undefined && isHexGrid()){
       evenSnapping = getEvenSnappingFlag(token)
     }
     //determine if this is measuring from an even token; even tokens need to have their snapping points offset
@@ -127,7 +127,7 @@ Ruler.prototype.moveToken = async function() {
     let altSnapping = getAltSnappingFlag(token)
     
     //if using alt snapping, just put the center of the token to the waypoint 
-    if(token != undefined && altSnapping){
+    if(token != undefined && altSnapping && isHexGrid()){
   		let wasPaused = game.paused;
   		if ( wasPaused && !game.user.isGM ) {
         ui.notifications.warn(game.i18n.localize("GAME.PausedWarning"));
