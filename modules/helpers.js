@@ -84,10 +84,6 @@ export function getAltOrientationFlag(token){
     return altOrientation;
 }
 
-export function isHexGrid() {
-	return ![CONST.GRID_TYPES.GRIDLESS, CONST.GRID_TYPES.SQUARE].includes(canvas.grid.type);
-}
-
 /**
  * Calculates the offset between the top left of a token and its center
  * @param (Token) token the token to calculate the offset of
