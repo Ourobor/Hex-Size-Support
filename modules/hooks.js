@@ -1,14 +1,5 @@
 import { HexTokenConfig } from './hex-token-config.js'
-import { findVertexSnapPoint, findMovementToken, getEvenSnappingFlag, getAltSnappingFlag, getAltOrientationFlag, getCenterOffset } from './helpers.js'
-
-export function getKey(event) {
-    if ( event.code === "Space" ) return event.code;
-    if ( /^Digit/.test(event.code) ) return event.code[5];
-    if ( (event.location === 3) && ((event.code in game.keyboard.moveKeys) || (event.code in game.keyboard.zoomKeys)) ) {
-        return event.code;
-    }
-    return event.key;
-}
+import { findVertexSnapPoint, findMovementToken, getEvenSnappingFlag, getAltSnappingFlag, getAltOrientationFlag, getCenterOffset, getKey } from './helpers.js'
 
 //load in the hex token config's html template
 Hooks.once('init', async function(){
