@@ -1,3 +1,4 @@
+import { getKey } from './helpers.js'
 
 export class HexTokenConfig extends FormApplication {
 
@@ -168,7 +169,7 @@ export class HexTokenConfig extends FormApplication {
 
 
   _onKeyDown(event) {
-    const key = game.keyboard.getKey(event);
+    const key = getKey(event);
     if ( !(key in game.keyboard.moveKeys) || game.keyboard.hasFocus ) return;
     event.preventDefault();
 
