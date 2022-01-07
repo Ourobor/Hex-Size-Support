@@ -1,5 +1,5 @@
 import { HexTokenConfig } from './hex-token-config.js'
-import { findVertexSnapPoint, findMovementToken, getEvenSnappingFlag, getAltSnappingFlag, getAltOrientationFlag, getCenterOffset } from './helpers.js'
+import { findVertexSnapPoint, findMovementToken, getEvenSnappingFlag, getAltSnappingFlag, getAltOrientationFlag, getCenterOffset, getKey } from './helpers.js'
 
 //load in the hex token config's html template
 Hooks.once('init', async function(){
@@ -36,7 +36,7 @@ Hooks.once("ready", async function(){
 
 
     document.addEventListener("keydown", function(event){
-        const key = game.keyboard.getKey(event);
+        const key = getKey(event);
         if(event.shiftKey){
             if(key == "R" || key == "r"){
                 let tokens = canvas.tokens.placeables.filter(o => o._controlled); 
