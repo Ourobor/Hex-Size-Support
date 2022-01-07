@@ -173,6 +173,15 @@ function calculateSnapPointsCols(x,y,h,w,xOff, yOff){
     return {x: snapX, y: snapY}
 }
 
+export function getKey(event) {
+    if ( event.code === "Space" ) return event.code;
+    if ( /^Digit/.test(event.code) ) return event.code[5];
+    if ( (event.location === 3) && ((event.code in game.keyboard.moveKeys) || (event.code in game.keyboard.zoomKeys)) ) {
+        return event.code;
+    }
+    return event.key;
+}
+
 //##############################################################
 //#############Deprecated#######################################
 //##############################################################
