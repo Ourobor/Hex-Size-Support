@@ -1,30 +1,30 @@
 {
-  "name": "hex-size-support",
-  "title": "Hex Token Size Support",
-  "description": "Improves support for hexagonal tokens of sizes greater than one by altering the grid snapping rules",
-  "author": "Ourobor",
-  "authors": [
-    {
-      "name":"Ourobor",
-      "email":"",
-      "url": "https://github.com/Ourobor"
-    },
-    {
-      "name":"Kuenaimaku",
-      "email":"",
-      "url": "https://github.com/Kuenaimaku"
-    }
-  ],
-  "version": "1.1.1",
-  "minimumCoreVersion": "9.238",
-  "compatibleCoreVersion": "9.255",
-  "esmodules": [
-    "modules/hooks.js",
-    "modules/ruler-changes.js",
-    "modules/helpers.js",
-    "modules/token-changes.js"
-  ],
-  "url": "https://github.com/Ourobor/Hex-Size-Support",
-  "manifest": "https://raw.githubusercontent.com/Ourobor/Hex-Size-Support/1.1.1/module.json",
-  "download": "https://github.com/Ourobor/Hex-Size-Support/archive/refs/tags/1.1.1.zip"
+	"name": "hex-size-support",
+	"title": "Hex Token Size Support",
+	"description": "Improves support for hexagonal tokens of sizes greater than one by altering the grid snapping rules",
+	"author": "Ourobor",
+	"authors": [
+		{
+			"name": "Ourobor",
+			"email": "",
+			"url": "https://github.com/Ourobor"
+		},
+		{
+			"name": "Kuenaimaku",
+			"email": "",
+			"url": "https://github.com/Kuenaimaku"
+		}
+	],
+	"version": "1.1.2",
+	"minimumCoreVersion": "9.238",
+	"compatibleCoreVersion": "9.255",
+	"esmodules": [
+		"modules/hooks.js",
+		"modules/ruler-changes.js",
+		"modules/helpers.js",
+		"modules/token-changes.js"
+	],
+	"url": "https://github.com/Ourobor/Hex-Size-Support",
+	"manifest": "https://raw.githubusercontent.com/Ourobor/Hex-Size-Support/1.1.1/module.json",
+	"download": "https://github.com/Ourobor/Hex-Size-Support/archive/refs/tags/1.1.1.zip"
 }
