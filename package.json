@@ -19,5 +19,8 @@
   },
   "author": "Kuenaimaku",
   "license": "MIT",
-  "repository": "https://github.com/Kuenaimaku/Hex-Size-Support.git"
+  "repository": "https://github.com/Kuenaimaku/Hex-Size-Support.git",
+  "optionalDependencies": {
+    "fsevents": "^2.3.2"
+  }
 }
