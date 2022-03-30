@@ -1,5 +1,11 @@
 import { HexTokenConfig } from './hex-token-config.js'
+import { registerSettings  } from './settings.js'
 import { findVertexSnapPoint, findMovementToken, getEvenSnappingFlag, getAltSnappingFlag, getAltOrientationFlag, getCenterOffset } from './helpers.js'
+
+Hooks.once('setup', async function() {
+	console.log("Initializing Hex Size Support module");
+    registerSettings();
+});
 
 //load in the hex token config's html template
 Hooks.once('init', async function(){

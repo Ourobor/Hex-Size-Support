@@ -36,7 +36,17 @@ Token.prototype.refresh = (function () {
 
 			//override null if the border is always to be shown
 			if(alwaysShowBorder == true && !borderColor){
-				borderColor = 0x56a2d6
+				if(this.owner){
+					borderColor = 0xFF9829
+				} else if (this.data?.disposition === CONST.TOKEN_DISPOSITIONS.FRIENDLY){
+					borderColor = 0x43DFDF
+				} else if (this.data?.disposition === CONST.TOKEN_DISPOSITIONS.NEUTRAL){
+					borderColor = 0xF1D836
+				} else if (this.data?.disposition === CONST.TOKEN_DISPOSITIONS.HOSTILE){
+					borderColor = 0xE72124
+				} else {
+					borderColor = 0x56a2d6
+				}
 			}
 
 			if(!!borderColor){
@@ -89,17 +99,32 @@ Token.prototype.refresh = (function () {
 			    	})
 
 				this.hitArea = new PIXI.Polygon(shiftedPoints.flat())
-				
+
 				this.border.clear()
+				this.border.alpha = 1;
 				this.border.lineStyle(4, 0x000000, 0.8).drawPolygon(shiftedPoints.flat());
 				this.border.lineStyle(2, borderColor || 0xFF9829, 1.0).drawPolygon(shiftedPoints.flat());
 
-				//Muck around with layering to get the border on top
+				//Fill in border based on module setting
+				let fillBorder = game.settings.get("hex-size-support", "fillBorder");
+
+				if(fillBorder){
+					this.border.beginFill(borderColor, 0.3).drawPolygon(shiftedPoints.flat());
+				}
+
+				//conditionally layer border behind token
+				let borderBehindToken = game.settings.get("hex-size-support", "borderBehindToken");
+
 				if(alwaysShowBorder){
 					if(this.sortableChildren == false){
 						this.sortableChildren = true;
 					}
-					this.border.zIndex = 10;
+					if(borderBehindToken == true){
+						this.border.zIndex = 0;
+					}
+					else{
+						this.border.zIndex = 10;
+					}
 				}
 			}
 		}
