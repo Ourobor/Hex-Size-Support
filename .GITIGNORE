@@ -1,0 +1,6 @@
+# Jetbrains IDE files
+.idea/**
+
+node_modules
+dist
+hex-size-support
