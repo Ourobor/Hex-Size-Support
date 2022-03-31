@@ -36,24 +36,26 @@ Ruler.prototype._addWaypoint = function (point) {
 };
 
 //overwrite measure to recalculate the location that ruler is going to move the token to, handling alt snapping stuff
-Ruler.prototype.measure = function (destination, { gridSpaces = true } = {}) {
-	let token = findMovementToken(this.waypoints[0].x, this.waypoints[0].y);
+Ruler.prototype.measure = function(destination, {gridSpaces=true}={}) {
+	let token = findMovementToken(this.waypoints[0].x,this.waypoints[0].y);	
 	let center = canvas.grid.getCenter(destination.x, destination.y);
 
 	let evenSnapping;
-	if (token != undefined) {
-		evenSnapping = getEvenSnappingFlag(token);
+	if(token != undefined){
+		evenSnapping = getEvenSnappingFlag(token)
 	}
 	//determine if this is measuring from an even token; even tokens need to have their snapping points offset
-	if (evenSnapping) {
-		let newPoints = findVertexSnapPoint(destination.x, destination.y, token, canvas.grid.grid);
+	if(evenSnapping){
+
+		let newPoints = findVertexSnapPoint(destination.x, destination.y, token, canvas.grid.grid)
 
 		destination = new PIXI.Point(newPoints.x, newPoints.y);
-	} else {
+	}
+	else{
 		destination = new PIXI.Point(...canvas.grid.getCenter(destination.x, destination.y));
 	}
 
-	//I'm annoyed because above was all that needed to change in the original method >_>
+//I'm annoyed because above was all that needed to change in the original method >_>
 
 	const waypoints = this.waypoints.concat([destination]);
 	const r = this.ruler;
@@ -61,24 +63,24 @@ Ruler.prototype.measure = function (destination, { gridSpaces = true } = {}) {
 
 	// Iterate over waypoints and construct segment rays
 	const segments = [];
-	for (let [i, dest] of waypoints.slice(1).entries()) {
+	for ( let [i, dest] of waypoints.slice(1).entries() ) {
 		const origin = waypoints[i];
 		const label = this.labels.children[i];
 		const ray = new Ray(origin, dest);
-		if (ray.distance < 10) {
-			if (label) label.visible = false;
+		if ( ray.distance < 10 ) {
+			if ( label ) label.visible = false;
 			continue;
 		}
-		segments.push({ ray, label });
+		segments.push({ray, label});
 	}
 
 	// Compute measured distance
-	const distances = canvas.grid.measureDistances(segments, { gridSpaces });
+	const distances = canvas.grid.measureDistances(segments, {gridSpaces});
 	let totalDistance = 0;
-	for (let [i, d] of distances.entries()) {
+	for ( let [i, d] of distances.entries() ) {
 		totalDistance += d;
 		let s = segments[i];
-		s.last = i === segments.length - 1;
+		s.last = i === (segments.length - 1);
 		s.distance = d;
 		s.text = this._getSegmentLabel(d, totalDistance, s.last);
 	}
@@ -89,19 +91,15 @@ Ruler.prototype.measure = function (destination, { gridSpaces = true } = {}) {
 
 	// Draw measured path
 	r.clear();
-	for (let s of segments) {
-		const { ray, label, text, last } = s;
+	for ( let s of segments ) {
+		const {ray, label, text, last} = s;
 
 		// Draw line segment
-		r.lineStyle(6, 0x000000, 0.5)
-			.moveTo(ray.A.x, ray.A.y)
-			.lineTo(ray.B.x, ray.B.y)
-			.lineStyle(4, this.color, 0.25)
-			.moveTo(ray.A.x, ray.A.y)
-			.lineTo(ray.B.x, ray.B.y);
+		r.lineStyle(6, 0x000000, 0.5).moveTo(ray.A.x, ray.A.y).lineTo(ray.B.x, ray.B.y)
+		 .lineStyle(4, this.color, 0.25).moveTo(ray.A.x, ray.A.y).lineTo(ray.B.x, ray.B.y);
 
 		// Draw the distance label just after the endpoint of the segment
-		if (label) {
+		if ( label ) {
 			label.text = text;
 			label.alpha = last ? 1.0 : 0.5;
 			label.visible = true;
@@ -114,13 +112,14 @@ Ruler.prototype.measure = function (destination, { gridSpaces = true } = {}) {
 	}
 
 	// Draw endpoints
-	for (let p of waypoints) {
+	for ( let p of waypoints ) {
 		r.lineStyle(2, 0x000000, 0.5).beginFill(this.color, 0.25).drawCircle(p.x, p.y, 8);
 	}
 
 	// Return the measured segments
 	return segments;
-};
+}
+
 
 //cache the old move token function so we can run it if the token doesn't need alternative snapping logic
 Ruler.prototype.moveTokenCached = Ruler.prototype.moveToken;
