@@ -1,5 +1,7 @@
 export const registerSettings = function () {
 
+	const debouncedReload = foundry.utils.debounce(() => window.location.reload(), 100);
+	
   game.settings.register("hex-size-support", "alwaysShowBorder", {
 		name: "Always Show Border",
 		hint: "Always render the token's border.",
@@ -7,7 +9,7 @@ export const registerSettings = function () {
 		type: Boolean,
 		config: true,
 		default: false,
-		onChange: () => window.location.reload(),
+		onChange: debouncedReload,
 	});
 
 	game.settings.register("hex-size-support", "borderWidth", {
@@ -22,7 +24,7 @@ export const registerSettings = function () {
 			max: 20,
 			step: 1,
 		},
-		onChange: () => window.location.reload(),
+		onChange: debouncedReload,
 	});
 
 	game.settings.register("hex-size-support", "borderBehindToken", {
@@ -32,7 +34,7 @@ export const registerSettings = function () {
 		type: Boolean,
 		config: true,
 		default: false,
-		onChange: () => window.location.reload(),
+		onChange: debouncedReload,
 	});
 
 	game.settings.register("hex-size-support", "fillBorder", {
@@ -42,6 +44,6 @@ export const registerSettings = function () {
 		type: Boolean,
 		config: true,
 		default: false,
-		onChange: () => window.location.reload(),
+		onChange: debouncedReload,
 	});
 };
