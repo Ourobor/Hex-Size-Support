@@ -46,4 +46,44 @@ export const registerSettings = function () {
 		default: false,
 		onChange: debouncedReload,
 	});
+
+	/**
+	 * Border Color Settings
+	*/
+
+	game.settings.register("hex-size-support", "controlledColor", {
+		name: 'Color: Controlled',
+		scope: 'client',
+		type: String,
+		default: "#0A7AB2",
+		config: true,
+		onChange: debouncedReload,
+	});
+
+	game.settings.register("hex-size-support", "friendlyColor", {
+		name: 'Color: Friendly',
+		scope: 'client',
+		type: String,
+		default: "#0A7AB2",
+		config: true,
+		onChange: debouncedReload,
+	});
+
+	game.settings.register("hex-size-support", "neutralColor", {
+		name: 'Color: Neutral',
+		scope: 'client',
+		type: String,
+		default: "#F1D836",
+		config: true,
+		onChange: debouncedReload,
+	});
+
+	game.settings.register("hex-size-support", "hostileColor", {
+		name: 'Color: Hostile',
+		scope: 'client',
+		type: String,
+		default: "#E72124",
+		config: true,
+		onChange: debouncedReload,
+	});
 };

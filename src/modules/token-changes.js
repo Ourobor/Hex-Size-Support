@@ -41,12 +41,14 @@ Token.prototype.refresh = (function () {
 
 			//override null if the border is always to be shown
 			if (alwaysShowBorder == true && !borderColor) {
-				if (this.data?.disposition === CONST.TOKEN_DISPOSITIONS.FRIENDLY) {
-					borderColor = 0x0a7ab2;
+				if (!game.user.isGM && this.owner){
+					borderColor = parseInt(game.settings.get("hex-size-support", "controlledColor").substr(1), 16);
+				} else if (this.data?.disposition === CONST.TOKEN_DISPOSITIONS.FRIENDLY) {
+					borderColor = parseInt(game.settings.get("hex-size-support", "friendlyColor").substr(1), 16);
 				} else if (this.data?.disposition === CONST.TOKEN_DISPOSITIONS.NEUTRAL) {
-					borderColor = 0xf1d836;
+					borderColor = parseInt(game.settings.get("hex-size-support", "neutralColor").substr(1), 16);
 				} else if (this.data?.disposition === CONST.TOKEN_DISPOSITIONS.HOSTILE) {
-					borderColor = 0xe72124;
+					borderColor = parseInt(game.settings.get("hex-size-support", "hostileColor").substr(1), 16);
 				} else {
 					borderColor = 0x56a2d6;
 				}
