@@ -168,7 +168,7 @@ export class HexTokenConfig extends FormApplication {
 
 	_onKeyDown(event) {
 		const key = getKey(event);
-		if (!(key in game.keyboard.moveKeys) || game.keyboard.hasFocus) return;
+		if (game.keyboard.hasFocus) return;
 		event.preventDefault();
 
 		const up = ["w", "W", "ArrowUp"];
