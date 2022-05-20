@@ -6,14 +6,14 @@
 	"authors": [
 		{
 			"name": "Kuenaimaku",
-			"email": "",
+			"email": "kuenaimaku@gmail.com",
 			"url": "https://github.com/Kuenaimaku"
 		},
 		{
 			"name": "Ourobor",
 			"email": "",
 			"url": "https://github.com/Ourobor"
-		},
+		}
 	],
 	"version": "1.3.0",
 	"minimumCoreVersion": "9",
