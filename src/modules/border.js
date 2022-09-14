@@ -32,6 +32,17 @@ export function registerBorderWrappers() {
 					if (fill_border) this.border.beginFill(borderColor, 0.3).drawPolygon(polygon);
 					return;
 				}
+			} else if (
+				canvas.grid.type === CONST.GRID_TYPES.GRIDLESS &&
+				this.document.width === this.document.height
+			) {
+				this.border.lineStyle(t, 0x000000, 0.8).drawCircle(this.w / 2, this.h / 2, this.w / 2);
+				this.border
+					.lineStyle(t / 2, borderColor, 1.0)
+					.drawCircle(this.w / 2, this.h / 2, this.w / 2);
+				if (fill_border)
+					this.border.beginFill(borderColor, 0.3).drawCircle(this.w / 2, this.h / 2, this.w / 2);
+				return;
 			}
 
 			// Otherwise, draw square border
