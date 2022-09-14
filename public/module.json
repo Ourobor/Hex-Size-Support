@@ -2,7 +2,6 @@
 	"id": "hex-size-support",
 	"title": "Hex Token Size Support",
 	"description": "Improves support for hexagonal tokens of sizes greater than one by altering the grid snapping rules",
-	"author": "Kuenaimaku",
 	"authors": [
 		{
 			"name": "Kuenaimaku",
@@ -27,11 +26,12 @@
 				"type": "module",
 				"compatibility": {
 					"minimum": "1.0.0.0",
-					"verified": "1.2.12.6.0"
+					"verified": "1.12.6.0"
 				}
 			}
 		]
 	},
+	"languages": [{ "lang": "en", "name": "English", "path": "lang/en.json" }],
 	"esmodules": ["hss.js"],
 	"url": "https://github.com/Kuenaimaku/hex-size-support.git",
 	"manifest": "",

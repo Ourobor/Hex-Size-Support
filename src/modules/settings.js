@@ -5,8 +5,8 @@ export function registerSettings() {
 	};
 
 	game.settings.register("hex-size-support", "alwaysShowBorder", {
-		name: "Always Show Border",
-		hint: "Always render the token's border.",
+		name: "hex-size-support.settings.alwaysShowBorder.name",
+		hint: "hex-size-support.settings.alwaysShowBorder.hint",
 		scope: "world",
 		type: Boolean,
 		config: true,
@@ -15,8 +15,8 @@ export function registerSettings() {
 	});
 
 	game.settings.register("hex-size-support", "borderWidth", {
-		name: "Border Width",
-		hint: "Specify the width of the token's border",
+		name: "hex-size-support.settings.borderWidth.name",
+		hint: "hex-size-support.settings.borderWidth.hint",
 		scope: "world",
 		type: Number,
 		config: true,
@@ -34,8 +34,8 @@ export function registerSettings() {
 	CONFIG.Canvas.objectBorderThickness = game.settings.get("hex-size-support", "borderWidth");
 
 	game.settings.register("hex-size-support", "borderBehindToken", {
-		name: "Keep Border Behind Token",
-		hint: "Render the token's border behind the token instead of in front.",
+		name: "hex-size-support.settings.borderBehindToken.name",
+		hint: "hex-size-support.settings.borderBehindToken.hint",
 		scope: "world",
 		type: Boolean,
 		config: true,
@@ -44,8 +44,8 @@ export function registerSettings() {
 	});
 
 	game.settings.register("hex-size-support", "fillBorder", {
-		name: "Fill Border Contents",
-		hint: "Add a translucent color to the token's border contents.",
+    name: "hex-size-support.settings.fillBorder.name",
+		hint: "hex-size-support.settings.fillBorder.hint",
 		scope: "world",
 		type: Boolean,
 		config: true,
@@ -58,7 +58,7 @@ export function registerSettings() {
 	 */
 
 	game.settings.register("hex-size-support", "controlledColor", {
-		name: "Color: Controlled",
+		name: "hex-size-support.settings.controlledColor.name",
 		scope: "client",
 		type: String,
 		default: "#FF9829",
@@ -74,7 +74,7 @@ export function registerSettings() {
 	);
 
 	game.settings.register("hex-size-support", "partyColor", {
-		name: "Color: Party",
+		name: "hex-size-support.settings.partyColor.name",
 		scope: "client",
 		type: String,
 		default: "#0A7AB2",
@@ -90,7 +90,7 @@ export function registerSettings() {
 	);
 
 	game.settings.register("hex-size-support", "friendlyColor", {
-		name: "Color: Friendly",
+		name: "hex-size-support.settings.friendlyColor.name",
 		scope: "client",
 		type: String,
 		default: "#0A7AB2",
@@ -106,6 +106,7 @@ export function registerSettings() {
 	);
 
 	game.settings.register("hex-size-support", "neutralColor", {
+		name: "hex-size-support.settings.neutralColor.name",
 		name: "Color: Neutral",
 		scope: "client",
 		type: String,
@@ -122,6 +123,7 @@ export function registerSettings() {
 	);
 
 	game.settings.register("hex-size-support", "hostileColor", {
+		name: "hex-size-support.settings.hostileColor.name",
 		name: "Color: Hostile",
 		scope: "client",
 		type: String,

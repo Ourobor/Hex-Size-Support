@@ -1,0 +1,49 @@
+{
+	"hex-size-support": {
+		"settings": {
+			"alwaysShowBorder": {
+				"name": "Always Show Border",
+				"hint": "Always render the token's border."
+			},
+			"borderWidth": {
+				"name": "Border Width",
+				"hint": "Specify the width of the token's border"
+			},
+			"borderBehindToken": {
+				"name": "Keep Border Behind Token",
+				"hint": "Render the token's border behind the token instead of in front."
+			},
+			"fillBorder": {
+				"name": "Fill Border Contents",
+				"hint": "Add a translucent color to the token's border contents."
+			},
+			"controlledColor": {
+				"name": "Color: Controlled"
+			},
+			"partyColor": {
+				"name": "Color: Party"
+			},
+			"friendlyColor": {
+				"name": "Color: Friendly"
+			},
+			"neutralColor": {
+				"name": "Color: Neutral"
+			},
+			"hostileColor": {
+				"name": "Color: Hostile"
+			}
+		},
+		"tokenConfig": {
+			"pivotx": {
+				"label": "Token Offset X"
+			},
+			"pivoty": {
+				"label": "Token Offset Y"
+			},
+			"altOrientation": {
+				"label": "Alternate Orientation(Size 2/4/etc)",
+				"notes": "Flip the orientation of the token"
+			}
+		}
+	}
+}
