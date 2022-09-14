@@ -6,13 +6,16 @@ export function registerBorderWrappers() {
 		function () {
 			/** @type boolean */
 			const always_show = game.settings.get("hex-size-support", "alwaysShowBorder");
-      const options = {};
-      if (always_show) options.hover = true;
+			/** @type boolean */
+			const fill_border = game.settings.get("hex-size-support", "fillBorder");
+			const options = {};
+			if (always_show) options.hover = true;
 
 			this.border.clear();
 			if (!this.isVisible) return;
 			const borderColor = this._getBorderColor(options);
 			if (borderColor == null) return;
+
 			const t = CONFIG.Canvas.objectBorderThickness;
 			this.border.position.set(this.document.x, this.document.y);
 
@@ -26,6 +29,7 @@ export function registerBorderWrappers() {
 				if (polygon) {
 					this.border.lineStyle(t, 0x000000, 0.8).drawPolygon(polygon);
 					this.border.lineStyle(t / 2, borderColor, 1.0).drawPolygon(polygon);
+					if (fill_border) this.border.beginFill(borderColor, 0.3).drawPolygon(polygon);
 					return;
 				}
 			}
@@ -35,7 +39,19 @@ export function registerBorderWrappers() {
 			const o = Math.round(h / 2);
 			this.border.lineStyle(t, 0x000000, 0.8).drawRoundedRect(-o, -o, this.w + h, this.h + h, 3);
 			this.border.lineStyle(h, borderColor, 1.0).drawRoundedRect(-o, -o, this.w + h, this.h + h, 3);
+			if (fill_border) {
+				this.border.beginFill(borderColor, 0.3).drawRoundedRect(0, 0, this.w, this.h, 3);
+			}
 		},
 		"OVERRIDE"
 	);
+}
+
+export function moveBorderLayer() {
+	/** @type boolean */
+	const border_below = game.settings.get("hex-size-support", "borderBehindToken");
+	if (border_below) return;
+	const borders = canvas.grid.borders;
+	canvas.grid.removeChild(borders);
+	canvas.tokens.addChild(borders);
 }

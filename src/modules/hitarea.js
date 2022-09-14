@@ -1,4 +1,3 @@
-
 /** @param {Token} token */
 export function hitAreaDraw(token) {
 	if (canvas?.grid.isHex) {
@@ -11,7 +10,7 @@ export function hitAreaDraw(token) {
 	}
 }
 
-  /** @param {TokenDocument} token */
+/** @param {TokenDocument} token */
 export function hitAreaUpdate(token, data) {
 	if (
 		canvas?.grid.isHex &&

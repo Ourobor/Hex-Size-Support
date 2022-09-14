@@ -5,7 +5,7 @@
 // import "./modules/token-changes";
 import { registerSettings, renderSettingsConfig } from "./modules/settings";
 import { hitAreaDraw, hitAreaUpdate } from "./modules/hitarea";
-import { registerBorderWrappers } from "./modules/border";
+import { registerBorderWrappers, moveBorderLayer } from "./modules/border";
 
 Hooks.once("init", () => {
 	console.log("hex-size-support | Initializing module");
@@ -22,3 +22,6 @@ Hooks.on("updateToken", hitAreaUpdate);
 
 //Add the color pickers to the module settings menu.
 Hooks.on("renderSettingsConfig", renderSettingsConfig);
+
+// Move border layer above token images if border below is false
+Hooks.on("canvasReady", moveBorderLayer);
