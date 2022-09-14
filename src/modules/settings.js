@@ -1,5 +1,5 @@
 export function registerSettings() {
-	const debouncedReload = foundry.utils.debounce(() => window.location.reload(), 100);
+	//const debouncedReload = foundry.utils.debounce(() => window.location.reload(), 100);
 	const canvasRedraw = () => {
 		if (canvas.ready) canvas.draw();
 	};
@@ -26,8 +26,12 @@ export function registerSettings() {
 			max: 20,
 			step: 1,
 		},
-		onChange: canvasRedraw,
+		onChange: val => {
+			CONFIG.Canvas.objectBorderThickness = val;
+			canvasRedraw();
+		},
 	});
+	CONFIG.Canvas.objectBorderThickness = game.settings.get("hex-size-support", "borderWidth");
 
 	game.settings.register("hex-size-support", "borderBehindToken", {
 		name: "Keep Border Behind Token",
@@ -57,13 +61,33 @@ export function registerSettings() {
 		name: "Color: Controlled",
 		scope: "client",
 		type: String,
+		default: "#FF9829",
+		config: true,
+		onChange: val => {
+			CONFIG.Canvas.dispositionColors.CONTROLLED = parseInt(val.substr(1), 16);
+			canvasRedraw();
+		},
+	});
+	CONFIG.Canvas.dispositionColors.CONTROLLED = parseInt(
+		game.settings.get("hex-size-support", "controlledColor").substr(1),
+		16
+	);
+
+	game.settings.register("hex-size-support", "partyColor", {
+		name: "Color: Party",
+		scope: "client",
+		type: String,
 		default: "#0A7AB2",
 		config: true,
 		onChange: val => {
-      CONFIG.Canvas.dispositionColors = parseInt(val.substr(1), 16);
-      canvasRedraw()
-    },
+			CONFIG.Canvas.dispositionColors.PARTY = parseInt(val.substr(1), 16);
+			canvasRedraw();
+		},
 	});
+	CONFIG.Canvas.dispositionColors.PARTY = parseInt(
+		game.settings.get("hex-size-support", "partyColor").substr(1),
+		16
+	);
 
 	game.settings.register("hex-size-support", "friendlyColor", {
 		name: "Color: Friendly",
@@ -71,8 +95,15 @@ export function registerSettings() {
 		type: String,
 		default: "#0A7AB2",
 		config: true,
-		onChange: debouncedReload,
+		onChange: val => {
+			CONFIG.Canvas.dispositionColors.FRIENDLY = parseInt(val.substr(1), 16);
+			canvasRedraw();
+		},
 	});
+	CONFIG.Canvas.dispositionColors.FRIENDLY = parseInt(
+		game.settings.get("hex-size-support", "friendlyColor").substr(1),
+		16
+	);
 
 	game.settings.register("hex-size-support", "neutralColor", {
 		name: "Color: Neutral",
@@ -80,8 +111,15 @@ export function registerSettings() {
 		type: String,
 		default: "#F1D836",
 		config: true,
-		onChange: debouncedReload,
+		onChange: val => {
+			CONFIG.Canvas.dispositionColors.NEUTRAL = parseInt(val.substr(1), 16);
+			canvasRedraw();
+		},
 	});
+	CONFIG.Canvas.dispositionColors.NEUTRAL = parseInt(
+		game.settings.get("hex-size-support", "neutralColor").substr(1),
+		16
+	);
 
 	game.settings.register("hex-size-support", "hostileColor", {
 		name: "Color: Hostile",
@@ -89,8 +127,15 @@ export function registerSettings() {
 		type: String,
 		default: "#E72124",
 		config: true,
-		onChange: debouncedReload,
+		onChange: val => {
+			CONFIG.Canvas.dispositionColors.HOSTILE = parseInt(val.substr(1), 16);
+			canvasRedraw();
+		},
 	});
+	CONFIG.Canvas.dispositionColors.HOSTILE = parseInt(
+		game.settings.get("hex-size-support", "hostileColor").substr(1),
+		16
+	);
 }
 
 /**
@@ -101,20 +146,24 @@ export function renderSettingsConfig(_app, el, _data) {
 	let nC = game.settings.get("hex-size-support", "neutralColor");
 	let fC = game.settings.get("hex-size-support", "friendlyColor");
 	let hC = game.settings.get("hex-size-support", "hostileColor");
+	let pC = game.settings.get("hex-size-support", "partyColor");
 	let cC = game.settings.get("hex-size-support", "controlledColor");
 
-	el.find('[name="hex-size-support.neutralColor"]')
-		.parent()
-		.append(`<input type="color" value="${nC}" data-edit="hex-size-support.neutralColor">`);
-	el.find('[name="hex-size-support.friendlyColor"]')
-		.parent()
-		.append(`<input type="color" value="${fC}" data-edit="hex-size-support.friendlyColor">`);
-	el.find('[name="hex-size-support.hostileColor"]')
-		.parent()
-		.append(`<input type="color" value="${hC}" data-edit="hex-size-support.hostileColor">`);
 	el.find('[name="hex-size-support.controlledColor"]')
 		.parent()
 		.append(`<input type="color"value="${cC}" data-edit="hex-size-support.controlledColor">`);
+	el.find('[name="hex-size-support.partyColor"]')
+		.parent()
+		.append(`<input type="color" value="${pC}" data-edit="hex-size-support.partyColor">`);
+	el.find('[name="hex-size-support.friendlyColor"]')
+		.parent()
+		.append(`<input type="color" value="${fC}" data-edit="hex-size-support.friendlyColor">`);
+	el.find('[name="hex-size-support.neutralColor"]')
+		.parent()
+		.append(`<input type="color" value="${nC}" data-edit="hex-size-support.neutralColor">`);
+	el.find('[name="hex-size-support.hostileColor"]')
+		.parent()
+		.append(`<input type="color" value="${hC}" data-edit="hex-size-support.hostileColor">`);
 }
 
 /**

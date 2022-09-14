@@ -5,11 +5,13 @@
 // import "./modules/token-changes";
 import { registerSettings, renderSettingsConfig } from "./modules/settings";
 import { hitAreaDraw, hitAreaUpdate } from "./modules/hitarea";
+import { registerBorderWrappers } from "./modules/border";
 
 Hooks.once("init", () => {
 	console.log("hex-size-support | Initializing module");
 
 	registerSettings();
+	registerBorderWrappers();
 });
 
 // Hook token draw to change the hitArea
