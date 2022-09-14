@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+    "target": "es13",
     "types": ["@league-of-foundry-developers/foundry-vtt-types"]
   }
 }

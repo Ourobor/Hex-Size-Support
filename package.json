@@ -3,7 +3,7 @@
   "version": "1.1.6",
   "description": "Hex Size Support",
   "devDependencies": {
-    "@league-of-foundry-developers/foundry-vtt-types": "^9.255.3",
+    "@league-of-foundry-developers/foundry-vtt-types": "^9.280.0",
     "@rollup/plugin-node-resolve": "^13.0.5",
     "prettier": "^2.4.1",
     "rollup": "^2.58.0",
