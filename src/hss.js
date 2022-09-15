@@ -13,6 +13,10 @@ Hooks.once("init", () => {
 	console.log("hex-size-support | Initializing module");
 
 	registerSettings();
+});
+
+// Place all libWrapper registrations here to get in as early as possible.
+Hooks.once("libWrapper.Ready", () => {
 	registerBorderWrappers();
 	// registerGridWrapper();
 });
