@@ -38,6 +38,9 @@
 			}
 		},
 		"tokenConfig": {
+			"artpivot": {
+				"label": "Art Offset"
+			},
 			"pivotx": {
 				"label": "Token Offset X"
 			},

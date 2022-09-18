@@ -6,7 +6,7 @@
 export function extendTokenConfig(app, $el) {
 	$el.find("[name=width]").closest(".form-group").after(`
 	<div class="form-group slim">
-		<label>Art Offset</label>
+		<label>${game.i18n.localize("hex-size-support.tokenConfig.artpivot.label")}</label>
 		<div class="form-fields">
 			<label>X</label>
 			<input type="number" step="1" name="flags.hex-size-support.pivotx" placeholder="px" \
