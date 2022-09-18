@@ -8,6 +8,7 @@ import { registerSettings, renderSettingsConfig } from "./modules/settings";
 import { hitAreaDraw, hitAreaUpdate, pivotToken } from "./modules/hitarea";
 import { registerBorderWrappers, moveBorderLayer } from "./modules/border";
 import { registerGridWrapper, extendHexBorders } from "./modules/grid";
+import { extendTokenConfig } from "./modules/token-config";
 
 Hooks.once("init", () => {
 	console.log("hex-size-support | Initializing module");
@@ -36,3 +37,5 @@ Hooks.on("renderSettingsConfig", renderSettingsConfig);
 
 // Move border layer above token images if border below is false
 Hooks.on("canvasReady", moveBorderLayer);
+
+Hooks.on("renderTokenConfig", extendTokenConfig);

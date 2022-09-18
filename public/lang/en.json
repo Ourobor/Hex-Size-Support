@@ -45,7 +45,7 @@
 				"label": "Token Offset Y"
 			},
 			"altOrientation": {
-				"label": "Alternate Orientation(Size 2/4/etc)",
+				"label": "Alternate Orientation",
 				"notes": "Flip the orientation of the token"
 			}
 		}
