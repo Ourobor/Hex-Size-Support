@@ -1,11 +1,11 @@
+import { isAltOrientation } from "./grid";
+
 /** @param {Token} token */
 export function hitAreaDraw(token) {
 	if (canvas?.grid.isHex) {
-		const point_array = canvas.grid.grid.getBorderPolygon(
-			token.document.width,
-			token.document.height,
-			0
-		);
+		const point_array = isAltOrientation(token)
+			? canvas.grid.grid.getAltBorderPolygon(token.document.width, token.document.height, 0)
+			: canvas.grid.grid.getBorderPolygon(token.document.width, token.document.height, 0);
 		if (point_array) token.hitArea = new PIXI.Polygon(point_array);
 	} else if (
 		canvas.grid.type === CONST.GRID_TYPES.GRIDLESS &&
@@ -18,10 +18,15 @@ export function hitAreaDraw(token) {
 /** @param {TokenDocument} token */
 export function hitAreaUpdate(token, data) {
 	if (
-		canvas?.grid.isHex &&
-		["width", "height", "texture.scaleX", "texture.scaleY"].some(k => Object.hasOwn(data, k))
+		!["width", "height", "texture.scaleX", "texture.scaleY"].some(k => Object.hasOwn(data, k)) &&
+		foundry.utils.getProperty(data, "flags.hex-size-support.alternateOrientation") == null
 	) {
-		const point_array = canvas.grid.grid.getBorderPolygon(token.width, token.height, 0);
+		return;
+	}
+	if (canvas?.grid.isHex) {
+		const point_array = isAltOrientation(token.object)
+			? canvas.grid.grid.getAltBorderPolygon(token.width, token.height, 0)
+			: canvas.grid.grid.getBorderPolygon(token.width, token.height, 0);
 		if (point_array) token.object.hitArea = new PIXI.Polygon(point_array);
 	} else if (canvas.grid.type === CONST.GRID_TYPES.GRIDLESS && token.width === token.height) {
 		token.object.hitArea = new PIXI.Circle(

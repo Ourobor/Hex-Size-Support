@@ -5,6 +5,10 @@
 				"name": "Always Show Border",
 				"hint": "Always render the token's border."
 			},
+			"altOrientationDefault": {
+				"name": "Flip default orientation",
+				"hint": "If enabled, the larger side of even sized tokens will be on the bottom or right instead of the top or left"
+			},
 			"borderWidth": {
 				"name": "Border Width",
 				"hint": "Specify the width of the token's border"

@@ -7,7 +7,7 @@
 import { registerSettings, renderSettingsConfig } from "./modules/settings";
 import { hitAreaDraw, hitAreaUpdate, pivotToken } from "./modules/hitarea";
 import { registerBorderWrappers, moveBorderLayer } from "./modules/border";
-//import { registerGridWrapper } from "./modules/grid";
+import { registerGridWrapper, extendHexBorders } from "./modules/grid";
 
 Hooks.once("init", () => {
 	console.log("hex-size-support | Initializing module");
@@ -18,8 +18,10 @@ Hooks.once("init", () => {
 // Place all libWrapper registrations here to get in as early as possible.
 Hooks.once("libWrapper.Ready", () => {
 	registerBorderWrappers();
-	// registerGridWrapper();
+	registerGridWrapper();
 });
+
+Hooks.once("setup", extendHexBorders);
 
 // Hook token draw to change the hitArea
 Hooks.on("drawToken", hitAreaDraw);

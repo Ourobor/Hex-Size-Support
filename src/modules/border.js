@@ -1,3 +1,5 @@
+import { isAltOrientation } from "./grid";
+
 export function registerBorderWrappers() {
 	libWrapper.register(
 		"hex-size-support",
@@ -21,11 +23,9 @@ export function registerBorderWrappers() {
 
 			// Draw Hex border for size 1 tokens on a hex grid
 			if (canvas.grid.isHex) {
-				const polygon = canvas.grid.grid.getBorderPolygon(
-					this.document.width,
-					this.document.height,
-					t
-				);
+				const polygon = isAltOrientation(this)
+					? canvas.grid.grid.getAltBorderPolygon(this.document.width, this.document.height, t)
+					: canvas.grid.grid.getBorderPolygon(this.document.width, this.document.height, t);
 				if (polygon) {
 					this.border.lineStyle(t, 0x000000, 0.8).drawPolygon(polygon);
 					this.border.lineStyle(t / 2, borderColor, 1.0).drawPolygon(polygon);

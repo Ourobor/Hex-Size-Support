@@ -14,6 +14,16 @@ export function registerSettings() {
 		onChange: canvasRedraw,
 	});
 
+	game.settings.register("hex-size-support", "altOrientationDefault", {
+		name: "hex-size-support.settings.altOrientationDefault.name",
+		hint: "hex-size-support.settings.altOrientationDefault.hint",
+		scope: "world",
+		type: Boolean,
+		config: true,
+		default: false,
+		onChange: canvasRedraw,
+	});
+
 	game.settings.register("hex-size-support", "borderWidth", {
 		name: "hex-size-support.settings.borderWidth.name",
 		hint: "hex-size-support.settings.borderWidth.hint",
@@ -44,7 +54,7 @@ export function registerSettings() {
 	});
 
 	game.settings.register("hex-size-support", "fillBorder", {
-    name: "hex-size-support.settings.fillBorder.name",
+		name: "hex-size-support.settings.fillBorder.name",
 		hint: "hex-size-support.settings.fillBorder.hint",
 		scope: "world",
 		type: Boolean,
