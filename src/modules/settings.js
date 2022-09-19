@@ -1,5 +1,4 @@
 export function registerSettings() {
-	//const debouncedReload = foundry.utils.debounce(() => window.location.reload(), 100);
 	const canvasRedraw = () => {
 		if (canvas.ready) canvas.draw();
 	};
@@ -149,7 +148,7 @@ export function registerSettings() {
 		16
 	);
 
-  // Register flipping to keybinds for those that want it.
+	// Register flipping to keybinds for those that want it.
 	game.keybindings.register("hex-size-support", "swapOrientation", {
 		name: "hex-size-support.keybinds.swapOrientation.name",
 		hint: "hex-size-support.keybinds.swapOrientation.hint",
@@ -160,10 +159,10 @@ export function registerSettings() {
 }
 
 /**
- * @param {SettingsConfig} app
+ * @param {SettingsConfig} _app
  * @param {JQuery<HTMLElement>} el
  */
-export function renderSettingsConfig(_app, el, _data) {
+export function renderSettingsConfig(_app, el) {
 	let nC = game.settings.get("hex-size-support", "neutralColor");
 	let fC = game.settings.get("hex-size-support", "friendlyColor");
 	let hC = game.settings.get("hex-size-support", "hostileColor");
@@ -212,4 +211,9 @@ In regards to the 0.8.6 foundry update,
     My deepest thanks for the efforts of @FolkvangrForgent, @Eranziel, @The-E and @Bolts. Without your hard work and nagging, this update would
 have been a lot later than it had any right to be be. Life seems to really enjoy kicking me right when a new update comes out >.>
  - Ember Scaleborne 06/26/2021 <3
+
+Big huge thanks to Ember Scaleborne (@Ourobor). I would not have been
+able to make this update if you hadn't made this module in the first
+place. I hope you are doing well <3
+ - Bolts, 09/18/2022
 */

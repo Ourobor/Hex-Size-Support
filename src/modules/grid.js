@@ -103,11 +103,11 @@ export function extendHexBorders() {
 
 	// Add any extra polygons
 	HexagonalGrid.POINTY_HEX_BORDERS = {
-    ...pointy_borders,
+		...pointy_borders,
 		...BORDER_EXTENSIONS.POINTY,
 	};
 	HexagonalGrid.FLAT_HEX_BORDERS = {
-    ...flat_borders,
+		...flat_borders,
 		...BORDER_EXTENSIONS.FLAT,
 	};
 }
