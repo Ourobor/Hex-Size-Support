@@ -99,17 +99,15 @@ export function extendHexBorders() {
 
 	// Flip the size 2 polygons
 	pointy_borders[2] = pointy_borders[2].map(p => [p[0], 1 - p[1]]);
-	HexagonalGrid.POINTY_HEX_BORDERS = pointy_borders;
 	flat_borders[2] = flat_borders[2].map(p => [1 - p[0], p[1]]);
-	HexagonalGrid.FLAT_HEX_BORDERS = flat_borders;
 
 	// Add any extra polygons
 	HexagonalGrid.POINTY_HEX_BORDERS = {
-		...HexagonalGrid.POINTY_HEX_BORDERS,
+    ...pointy_borders,
 		...BORDER_EXTENSIONS.POINTY,
 	};
 	HexagonalGrid.FLAT_HEX_BORDERS = {
-		...HexagonalGrid.FLAT_HEX_BORDERS,
+    ...flat_borders,
 		...BORDER_EXTENSIONS.FLAT,
 	};
 }
