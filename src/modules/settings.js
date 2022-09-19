@@ -116,7 +116,6 @@ export function registerSettings() {
 
 	game.settings.register("hex-size-support", "neutralColor", {
 		name: "hex-size-support.settings.neutralColor.name",
-		name: "Color: Neutral",
 		scope: "client",
 		type: String,
 		default: "#F1D836",
@@ -133,7 +132,6 @@ export function registerSettings() {
 
 	game.settings.register("hex-size-support", "hostileColor", {
 		name: "hex-size-support.settings.hostileColor.name",
-		name: "Color: Hostile",
 		scope: "client",
 		type: String,
 		default: "#E72124",
