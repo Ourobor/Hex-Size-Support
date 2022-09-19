@@ -37,6 +37,12 @@
 				"name": "Color: Hostile"
 			}
 		},
+		"keybinds": {
+			"swapOrientation": {
+				"name": "Toggle Alternate Orientation",
+				"hint": "Toggles orientation for controlled hex tokens."
+			}
+		},
 		"tokenConfig": {
 			"artpivot": {
 				"label": "Art Offset"

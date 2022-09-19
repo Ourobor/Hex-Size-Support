@@ -148,6 +148,15 @@ export function registerSettings() {
 		game.settings.get("hex-size-support", "hostileColor").substr(1),
 		16
 	);
+
+  // Register flipping to keybinds for those that want it.
+	game.keybindings.register("hex-size-support", "swapOrientation", {
+		name: "hex-size-support.keybinds.swapOrientation.name",
+		hint: "hex-size-support.keybinds.swapOrientation.hint",
+		onDown: flipControlledTokens,
+		editable: [], //[{ key: "KeyR", modifiers: ["Shift"] }],
+		precedence: CONST.KEYBINDING_PRECEDENCE.NORMAL,
+	});
 }
 
 /**
@@ -176,6 +185,22 @@ export function renderSettingsConfig(_app, el, _data) {
 	el.find('[name="hex-size-support.hostileColor"]')
 		.parent()
 		.append(`<input type="color" value="${hC}" data-edit="hex-size-support.hostileColor">`);
+}
+
+/**
+ * Toggle the orientation flag on all controlled tokens
+ */
+function flipControlledTokens() {
+	const updates = canvas.tokens?.controlled.map(t => {
+		return {
+			_id: t.document.id,
+			"flags.hex-size-support.alternateOrientation": !t.document.getFlag(
+				"hex-size-support",
+				"alternateOrientation"
+			),
+		};
+	});
+	canvas.scene?.updateEmbeddedDocuments("Token", updates);
 }
 
 /**
