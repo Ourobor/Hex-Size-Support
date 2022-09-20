@@ -140,7 +140,7 @@ class HSSHexagonalGrid extends HexagonalGrid {
 		// this is the only real change from the foundry default
 		const points = (
 			this.columnar ? this.constructor.FLAT_HEX_BORDERS[w] : this.constructor.POINTY_HEX_BORDERS[w]
-		).map(p => [1 - p[0], 1 - p[1]]);
+		)?.map(p => [1 - p[0], 1 - p[1]]);
 
 		if (w !== h || !points) return null;
 		const p2 = p / 2;
