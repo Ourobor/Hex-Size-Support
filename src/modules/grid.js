@@ -182,8 +182,13 @@ class HSSHexagonalGrid extends HexagonalGrid {
 	 * @protected
 	 */
 	_adjustPositionForTokenSize(row, col, token) {
-		if (this.columnar && token.document.height > 2) row++;
-		if (!this.columnar && token.document.width > 2) col++;
+		const size = token.document.height === token.document.width ? token.document.width : undefined;
+		if (size) {
+			const alt_shape = isAltOrientation(token) ? 1 : 0;
+			const offset = Math.floor((size + alt_shape - 1) / 2) % 2;
+			if (this.columnar) row += offset;
+			if (!this.columnar) col += offset;
+		}
 		return [row, col];
 	}
 
