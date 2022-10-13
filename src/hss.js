@@ -8,6 +8,8 @@ Hooks.once("init", () => {
 	console.log("hex-size-support | Initializing module");
 	registerSettings();
 	extendHexBorders();
+	const API = {};
+	game.modules.get("hex-size-support").api = API;
 });
 
 Hooks.once("libWrapper.Ready", () => {
