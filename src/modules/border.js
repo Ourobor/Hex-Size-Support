@@ -11,10 +11,12 @@ export function registerBorderWrappers() {
 			/** @type boolean */
 			const fill_border = game.settings.get("hex-size-support", "fillBorder");
 			const options = {};
-			if (always_show) options.hover = true;
+			
+			/** @type boolean **/
+			const token_hide_border = this.document.getFlag("hex-size-support", "hideBorder");
 
 			this.border.clear();
-			if (!this.isVisible) return;
+			if (!this.isVisible || token_hide_border) return;
 			const borderColor = this._getBorderColor(options);
 			if (borderColor == null) return;
 

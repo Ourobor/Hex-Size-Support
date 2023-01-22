@@ -3,7 +3,7 @@
 		"settings": {
 			"alwaysShowBorder": {
 				"name": "Always Show Border",
-				"hint": "Always render the token's border."
+				"hint": "Always render the token's border. Overriden if a Token has 'Hide Border' checked."
 			},
 			"altOrientationDefault": {
 				"name": "Flip default orientation",
@@ -56,6 +56,10 @@
 			"altOrientation": {
 				"label": "Alternate Orientation",
 				"notes": "Flip the orientation of the token"
+			},
+			"hideBorder": {
+				"label": "Hide Border",
+				"notes": "Hide the token's border. Overrides Module setting 'Always Show Border.'"
 			}
 		}
 	}
