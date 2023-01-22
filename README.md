@@ -1,46 +1,29 @@
 # Hex Token Size Support
 A Foundry VTT add-on module that allows the use of alternative snapping logic for hex tiles of a size greater than one hex, specifically for token sizes used by the TTRPG Lancer.
 
-# Install
-**Please Note: This addon is currently in development. It does not contain all intended features and might not work correctly. Please report any bugs or issues by submitting an issue**
+# Installation
 
-Hex Token Size Support
+When installing an Add-On Module in Foundry, use the manifest url: https://github.com/Kuenaimaku/Hex-Size-Support/releases/latest/download/module.json
 
-When installing an Add-On Module in Foundry, use the manifest url: https://raw.githubusercontent.com/Ourobor/Hex-Size-Support/master/module.json
-
-Alternatively download the zip of the project and unzip it in the modules directory of your Foundry VTT install.
+Alternatively, download any release manually by downloading the `module.zip` for the related release in [releases](https://github.com/Kuenaimaku/Hex-Size-Support/releases).
 
 # How it works
-This module adds a new set of configuration options for a token that change snapping logic
-![Demo](https://i.imgur.com/EIb8kAQ.gif)
+A Foundry VTT add-on module that allows the use of alternative snapping logic for hex tiles of a size greater than one hex, specifically for token sizes used by the TTRPG Lancer.
 
-The **Border Size** dropdown allows you to select a size for the token. This will update the border of the token and automatically populate flags relevant for a token of the specified size.
-![Border Size Demo](https://i.imgur.com/h6rJSr9.gif)
+![Demo](https://i.imgur.com/UrVVO7Z.gif)
 
-The **Alternate Orientation** setting allows you to flip the border's orientation for even sized tokens. **This can also be toggled without the window open by selecting the token and pressing Shift+R**
-![Orientation Demo]([https://i.imgur.com/rV3KnMX.gif)
+## Module Configuration
 
-The **Token Offset and Token scale** settings allow you to customize where the art is displayed for the token without modifying the snapping logic. You can use the arrow keys to shift the art around relative to the token's border and scale the art by holding ALT and using the up/down keys.
-![Art Positioning Demo](https://i.imgur.com/dGnXTLM.gif)
+* **Always Show Border** - Always render the token's border. Defaults to `false`.
+* **Flip default orientation** - For even size hexes, there can be a discrepancy in which side is facing up - "Pointy" or "Flat". This setting allows the default  orientation to be changed to the other for all scenes. Defaults to `false`.
+* **Border Width** - Set the border width for tokens. Defaults to `2`.
+* **Keep Border Behind Token** - Force the border to render behind the token. Defaults to `true`.
+* **Fill Border Contents** - Add a translucent fill to the token's border. Defaults to `false`.
 
-The **Always show border for size larger than 2** setting causes a dull blue border to always be drawn for the token and ensures that it's drawn over the tokens art.
-![Always Draw Border Demo](https://i.imgur.com/liX4TO3.gif)
+Additionally, there are colorpicker settings in order to set the border controller for tokens depending on their current state and affiliation.
 
-## Advanced Flags
+## Token Appearance Settings
 
-If you use the border size dropdown, **you shouldn't need to touch these flags** as they should be automatically configured for you. They are provided only in case of some specific case I didn't forsee.
-
-The **Alternative Snapping** setting enables the new set of rules. By default this changes the way snapping is calculated to attempt to snap the center of the token to the center of the tile that happens to fall under the center of the token. This is subtly different than what Foundry does by default and allows hex tokens of size 3,5,etc to snap to their center properly
-
-The **Snap to Vertex(size 2/4)** setting switches the rules to instead snap the center of the token to the intersection of the hexes. Valid intersections are automatically calculated based on the orientation of the border and will only attempt to snap the token to valid locations for that orientation.
-
-# Tips
-
-* Any size token should be possible to use, even ones that use a lot of transparent space to get them to snap on other grids without modified logic.
-
-* You can use the Token Display Options form to make more "3d" tokens by having a portion of the art stick up past the top of the token
-
-* The Token Display Options form can be used to tweak token art placement even without the alternative snapping rules enabled and also on a square grid
-
-
-# Known Issues/Future Features
+* **Art Offset** - customize where the art is displayed for the token without modifying the snapping logic. This can be combined with the updated **Scale** setting to create a 3d-like effect for the token.
+* **Alternate Orientation** - For even size hexes, there can be a discrepancy in which side is facing up - "Pointy" or "Flat". This checkbox allows for each token to be toggled between the two.
+* **Hide Border** - When **Always Show Border** is enabled, this setting allows the token to override it. Defaults to false.
